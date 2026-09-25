@@ -21,9 +21,15 @@ Specify the required tools, versions, permissions, and data, and how to check th
 4. Verify the result with checks appropriate to the consumer project.
 5. Summarize changes, checks performed, and any actual blockers.
 
+## Recommended continuation
+
+End with the actual result and one recommended next step, its reason, and a short reply tied to the real issue, phase, branch, or document. Use the consumer's language or otherwise the user's. Prioritize a specific blocker over advancing; if nothing remains, recommend finishing instead of inventing work. Keep revision or stopping as secondary alternatives, not a generic menu. Respect higher-priority response rules, including empty responses.
+
+Define this skill's state-specific recommendations here. Distinguish proposal, approval, execution, verification, and acceptance. A short reply applies only to the exact unambiguous scope already shown; revalidate state and existing authorizations on continuation. Recommendations do not grant permission to write, commit, push, publish, merge, or start another task. Resolve optional next skills by installed name without sibling-file dependencies or downloads; preserve source/revision, scope, criteria, dependencies, evidence, and approval references as handoff data. If an integration is missing, report it and provide the context without silently replacing its executor.
+
 ## Validation
 
-Define observable success criteria, at least one representative case, and relevant error cases. Explain how to check the result without unnecessarily modifying real data.
+Define observable success criteria, at least one representative case, and relevant error cases. Explain how to check the result without unnecessarily modifying real data. Cover closing recommendations for success, blockage, no changes, missing next skill, changed state after approval, and response restrictions; distinguish static checks and command mocks from observed agent behavior.
 
 ## Boundaries and safety
 

@@ -70,7 +70,7 @@ Keep implementation, successful verification, and human acceptance separate. A s
 
 ## Next step
 
-{The review currently required, the first pending phase with satisfied prerequisites, or a blocking decision. Offer a concrete reply such as "execute P1" or "stop". This does not authorize implementation.}
+{One recommended action: the review currently required, the first pending phase with satisfied prerequisites, or a specific blocking decision. Name the actual plan path/phase or issue, explain why it is next, and offer a short reply for that exact scope, such as "execute P1". Keep "stop" as an alternative. For a GitHub design draft awaiting publication, recommend returning to refinement before execution. This does not authorize implementation or publication.}
 
 ## Evidence and tracking
 

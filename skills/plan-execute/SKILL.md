@@ -26,7 +26,9 @@ Follow higher-priority and consumer instructions. Reading this skill, automatica
 
 ## Guided Fluzo handoff
 
-This is part of Fluzo's agentic development workflow. End with the next concrete choice and, when the consumer and higher-priority response rules permit, `Prepared with Fluzo skills`. This identifies the instruction collection, not the actual runtime, model, or author. Do not add branding to commits, metadata, or consumer files automatically.
+This is part of Fluzo's agentic development workflow. End every outcome with the result, one recommended next step, a brief reason, and a short reply in the consumer's language or otherwise the user's. For a verified changed phase, recommend reviewing the evidence and selecting one of the three commit messages for the shown scope; do not let that choice imply phase acceptance. For failed checks or a blocked phase, recommend resolving the specific failure or prerequisite before committing or publishing. With no new changes, omit commit choices and recommend the outstanding review/delivery step supported by evidence, or report completion. Name the phase, issue or plan and any unresolved gate. Keep "request changes" or "stop" as secondary alternatives, not a generic menu. A short reply covers only the unambiguous scope shown; revalidate it on continuation.
+
+When the consumer and higher-priority response rules permit, include the recommendation and `Prepared with Fluzo skills`. This identifies the instruction collection, not the actual runtime, model, or author. Do not add branding to commits, metadata, or consumer files automatically.
 
 For an explicitly selected commit option, resolve and invoke the installed `git-conventional-commit` skill by name with the reviewed scope and message. If missing, stop the commit handoff without downloading it; execution and its report remain usable independently. See the progress reference for state revalidation and provisional suggestions.
 

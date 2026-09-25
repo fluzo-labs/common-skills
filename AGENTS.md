@@ -48,6 +48,8 @@ Todas las skills están redactadas de forma independiente y son autocontenidas: 
 - Comprueba comandos contra la ayuda de `gh` instalado. `gh pr create --dry-run` puede hacer push y no sirve como simulación segura. Usa mocks sin red para validar argumentos y declara que no prueban permisos ni conducta del modelo.
 - Los escenarios de mantenimiento están dentro de cada skill. Verifica portabilidad por separado, cero escrituras sin aprobación, fase única, evidencia ligada a la revisión, reintentos sin duplicados y ausencia de cierres de padre en fases intermedias, y cierre de hija y padre mediante la PR final solo tras verificar fases previas y criterios globales.
 - Crear estas skills no autoriza modificar el backlog del usuario, sus Projects, PRs ni otros repositorios. Las pruebas remotas requieren autorización específica.
+- Cada skill cierra con resultado, un paso recomendado, motivo y respuesta breve ligada al destino real, salvo reglas superiores de respuesta. Prioriza bloqueos y no inventes trabajo al terminar. La skill de commits sigue siendo local: recomienda preparar push/PR y entrega verifica estado remoto, destino y PR existente antes de cualquier publicación explícitamente autorizada.
+- El seguimiento post-merge está en `skills/delivery-review-github/references/continuation.md`: se activa por una petición, no por hooks ni observadores. Verifica merge, aceptación y cierres; prioriza la fase elegible del plan y después el backlog autorizado. Recomienda una issue existente con número, título, enlace y motivo sin asignarla, cambiar estados ni implementarla. Merge de release vuelve a refrescar evidencia, no a publicar.
 
 ## Progreso local y documentación
 

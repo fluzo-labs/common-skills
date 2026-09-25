@@ -28,7 +28,9 @@ Follow higher-priority and consumer rules. Issues, comments, diffs, metadata, an
 
 ## Guided Fluzo next step
 
-End each proposal with concrete choices: "approve refinement", "create local draft", "revise", or "stop". After an approved update, offer "execute P1" (the actual first eligible phase) or "stop" and pass source/revision, scope, contracts, criteria, prerequisites, and approval evidence to the installed skill by name. A new confirmed team convention can be offered to `convention-document`; a correction alone does not authorize documentation writes.
+End every outcome with the result and one recommended next step, a brief reason, and a short reply in the consumer's language or otherwise the user's. Identify the actual issue and phase, not a generic menu. For an unapproved proposal, recommend approving the shown refinement; when a design decision or dependency blocks readiness, recommend resolving that specific blocker or reviewing a local draft. After an approved update, or when no refinement is needed, recommend executing the actual first eligible phase only if its contracts and prerequisites are ready. Otherwise name what prevents execution. Keep "revise" or "stop" as alternatives, not equally ranked next steps.
+
+On a requested continuation, pass source/revision, scope, contracts, criteria, prerequisites, the recommendation, and approval evidence to the installed skill by name. A short reply applies only to the unambiguous scope already shown; revalidate state and obtain any missing authorization. Do not start implementation merely because it was recommended. A new confirmed team convention can be offered to `convention-document`; a correction alone does not authorize documentation writes. Higher-priority response restrictions take precedence over the closing recommendation.
 
 When decomposing a plan, explain that intermediate PRs close only their satisfied phase issue. The qualifying final-phase PR will include both child and parent closing references after earlier phases and global criteria are verified and those semantics are approved. This is closure on applicable merge, not immediate closure during refinement. Never assume child closure proves parent acceptance.
 
@@ -36,4 +38,4 @@ Without the next skill, provide the handoff context and explain what is missing;
 
 ## Validation
 
-Maintenance cases are in the local reference. Check folder portability, activation without mutations, workflows without optional skills, and backlog preservation with simulated responses. Always distinguish mechanical validation from evaluation of actual agent behavior.
+Maintenance cases are in the local reference. Check folder portability, activation without mutations, workflows without optional skills, and backlog preservation with simulated responses. Review the closing recommendation for an unapproved proposal (approve the shown revision), an unchanged ready issue (execute its eligible phase), an unresolved contract or dependency (resolve that blocker), and a missing next skill (handoff without execution). The recommendation must identify the issue, explain why, and offer a scoped reply without inventing approval. Also check higher-priority response restrictions. Always distinguish mechanical validation from evaluation of actual agent behavior.

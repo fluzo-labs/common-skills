@@ -102,13 +102,29 @@ En Crush, `user-invocable: true` permite invocación manual y las skills de proy
 | Concretar trabajo del backlog | [issue-refine-github](../skills/issue-refine-github/SKILL.md) | Issue existente y contexto del repositorio | Propuesta de conservar, ampliar o dividir; publicación solo aprobada |
 | Diseñar una tarea | [plan-create](../skills/plan-create/SKILL.md) | Objetivo y proyecto, opcionalmente una issue | Plan por fases; archivo solo con contenido y destino aprobados |
 | Implementar trabajo aprobado | [plan-execute](../skills/plan-execute/SKILL.md) | Fase, plan/issue, revisión y autorización | Implementación de una fase y evidencia de verificación |
-| Preparar revisión de código | [delivery-review-github](../skills/delivery-review-github/SKILL.md) | Cambios, issue, fase y resultados reales | Comentario y PR propuestos; publicación solo aprobada |
+| Preparar revisión de código | [delivery-review-github](../skills/delivery-review-github/SKILL.md) | Cambios, fase, resultados reales e issue cuando corresponda | Push, comentario y PR propuestos; publicación solo aprobada |
+| Continuar tras un merge | [delivery-review-github](../skills/delivery-review-github/SKILL.md) | PR identificada y alcance autorizado del plan/backlog | Merge y aceptación contrastados; una issue/fase recomendada sin implementarla |
 | Documentar acuerdos | [convention-document](../skills/convention-document/SKILL.md) | Convención confirmada, alcance y permiso de escritura | Documento con ejemplos/excepciones e índice actualizado |
 | Preparar una versión | [release-prepare-github](../skills/release-prepare-github/SKILL.md) | Modo, componente, rango/SHA y política de versión | Changelog, preparación o release expresamente autorizada |
 
 ## Recorrido guiado
 
-Para el recorrido completo instala las siete skills. Cada paso ofrece una respuesta concreta: «aprobar y guardar», «ejecutar P1», «commit con opción 2», «preparar PR» o «detenerse». El agente no encadena esas operaciones sin autorización. El paso de commit resuelve y lee `git-conventional-commit` instalada por nombre; si falta, conserva el trabajo y detiene ese handoff sin descargarla ni copiar su ejecutor.
+Para el recorrido completo instala las siete skills. Cada skill termina con resultado, **un siguiente paso recomendado**, motivo y una respuesta breve ligada al destino real. Las alternativas «revisar» o «detenerse» son secundarias: no se sustituye la recomendación por un menú genérico. Si hay un bloqueo, ese es el siguiente paso; si no queda trabajo, se recomienda terminar. El idioma sigue al consumidor o, en su defecto, al usuario. Las reglas superiores pueden exigir omitir el cierre, incluida una respuesta vacía tras un commit.
+
+El agente no encadena operaciones sin autorización. Una respuesta breve solo actúa sobre una operación y alcance previamente mostrados sin ambigüedad; «preparar» no significa «publicar» y «mergeada» no significa «implementa la siguiente». Se revalida el estado al continuar, sin repetir aprobaciones vigentes del mismo alcance. El paso de commit resuelve y lee `git-conventional-commit` instalada por nombre; si falta, conserva el trabajo y detiene ese handoff sin descargarla ni copiar su ejecutor.
+
+| Resultado | Recomendación principal |
+| --- | --- |
+| Refinamiento propuesto | Aprobar la revisión concreta, o resolver el contrato pendiente. |
+| Issue refinada y lista | Ejecutar su primera fase elegible identificada. |
+| Plan propuesto / guardado | Aprobar contenido y ruta / ejecutar la fase elegible; un borrador GitHub pendiente de publicación vuelve a refinamiento. |
+| Fase implementada y verificada | Revisar evidencia y seleccionar uno de los tres mensajes de commit. |
+| Comprobaciones fallidas o bloqueadas | Resolver el fallo o requisito concreto antes de avanzar. |
+| Commit creado | Preparar push y PR de la rama revisada, o verificar/actualizar la PR existente; para trabajo local, revisión local. |
+| PR publicada | Resolver checks/cambios, obtener revisión o seguir el proceso de merge autorizado del consumidor según el estado real. |
+| Merge verificado | Proponer una issue/fase elegible concreta; no empezar su implementación. |
+| Convención documentada | Revisar/registrar documentación o volver a la fase y paso pendientes del flujo de origen. |
+| Release preparada / publicada | Completar el siguiente requisito verificable / revisar tareas conocidas de distribución o terminar. |
 
 Fluzo es nuestra plataforma de desarrollo agéntica y la marca de la colección. El pie de respuesta `Prepared with Fluzo skills` no identifica al runtime real ni inventa autoría del modelo. Se omite si las reglas superiores lo requieren y no se inserta en archivos, commits, PRs o issues sin aprobación.
 
@@ -146,6 +162,24 @@ Al terminar presenta tres mensajes numerados según `git-conventional-commit`, i
 
 Consulta una PR existente antes de crear otra. La propuesta identifica base/head, revisión probada y semántica de cierre. Una entrega parcial referencia la issue sin cerrarla; una fase intermedia satisfecha cierra solo su hija. La PR de la última fase incluye cierres de hija y padre cuando todas las fases anteriores están aceptadas/integradas y hay evidencia de los criterios globales. Revisa hijas canceladas, cambios concurrentes, rama destino y soporte entre repositorios; abrir la PR no cierra nada, el cierre se produce al merge aplicable. El formato de la herramienta puede exigir una PR breve: la evidencia detallada puede quedar enlazada desde la issue.
 
+### Del commit al push y la PR
+
+> Prepara el push y la PR para la rama del commit que acabamos de revisar. Comprueba si ya hay una PR; muestra destino, commits y textos antes de publicar.
+
+La skill de commits no consulta GitHub ni ejecuta push. Transmite SHA, rama, contexto de issue/fase y evidencias a entrega. `delivery-review-github` contrasta remoto, destino, rango saliente, SHA publicado y PR existente. Si la rama ya está publicada en esa revisión, no necesita repetir el push. Si existe una PR abierta de la entrega, propone actualizarla, no duplicarla. Una PR anterior mergeada no se reutiliza como si siguiera abierta.
+
+Push, PR y comentario son operaciones distintas; una aprobación conjunta puede cubrir una lista exacta de operaciones, destinos y contenido ya revisados. Tras un push autorizado se verifica el SHA remoto antes de publicar la PR. Un rechazo o timeout requiere reconciliación, no force-push ni reintento a ciegas. Sin issue, una PR independiente no inventa referencias ni comentarios. Sin GitHub, se conserva la revisión local.
+
+### Después del merge: siguiente issue
+
+> Usa delivery-review-github para comprobar el merge de [URL real de PR] y recomendar la siguiente issue con título, enlace y motivo. No la asignes ni empieces todavía.
+
+Esta petición activa una comprobación de lectura, no un observador de GitHub ni una operación de merge. Se verifican estado mergeado, revisión, rama destino, aceptación y estado real de hija/padre. Una PR cerrada sin merge, auto-merge programado o cierre pendiente no prueba que el plan haya terminado. Si falta aceptación o reconciliación, se recomienda ese paso antes de avanzar.
+
+Primero se busca la siguiente fase elegible del plan actual. Tras completarlo, se consulta únicamente el backlog autorizado y se descubren sus prioridades, dependencias, responsables y trabajo en curso. Se recomienda **una issue existente con número cualificado, título, URL y motivo**; si necesita concretar contratos, se propone refinamiento, no ejecución. Una fase local se identifica por ruta e ID sin inventar una issue. No se duplica una implementación o PR ya en curso ni se toma trabajo de otro responsable.
+
+Si hay empate de prioridades, se explica el criterio como propuesta; si falta acceso, no se declara vacío el backlog. Si no hay candidata elegible, se recomienda resolver el bloqueo del plan, revisar un alcance explícito del backlog, preparar release cuando corresponda o terminar. Una PR de release vuelve a refrescar su manifiesto y aprobaciones. No hay cambios automáticos de estado, asignación, rama ni implementación. La continuación pasa fuente/revisión, issue/fase, criterios, dependencias y evidencia a la skill instalada por nombre; si falta, informa y conserva el contexto.
+
 ### Documentar una convención
 
 > Usa convention-document para registrar el acuerdo que acabamos de confirmar sobre [tema]. Incluye motivación, ejemplos reales, excepciones y actualiza el índice correspondiente. No cambies código ni hagas commit.
@@ -173,10 +207,11 @@ issue existente -> propuesta de refinamiento
                 -> ejecución de una fase aprobada
                 -> progreso local y tres opciones de commit
                 -> commit autorizado con la skill instalada
-                -> evidencia y propuesta de PR
+                -> propuesta de push, PR y actualización de issue
                 -> publicación/revisión/merge autorizados
-                -> siguiente fase o cierre de padre en el merge final
-                -> preparación de release
+                -> comprobación solicitada de merge, aceptación y cierres
+                -> recomendación de siguiente issue/fase elegible
+                -> ejecución solo tras autorización, o preparación de release
                 -> aprobación específica de tag y publicación
 ```
 
@@ -206,5 +241,7 @@ Una aprobación conjunta puede cubrir una lista exacta de operaciones, destinos 
 - **Quieres actualizar las skills:** revisa diferencias, conserva personalizaciones y fija la nueva revisión. No actualices automáticamente una carpeta compartida mientras agentes la utilizan.
 
 ## Límites de validación
+
+Los escenarios de continuación están en cada skill; entrega incluye la [matriz post-merge](../skills/delivery-review-github/references/continuation.md). Comprueba especialmente PR existente, rama sin publicar, permisos separados de push/PR, checks fallidos, cierre pendiente, siguiente fase bloqueada, prioridades empatadas, backlog agotado y skill de destino ausente. Una recomendación correcta no implica ejecución autorizada.
 
 Esta colección contiene instrucciones y escenarios de mantenimiento, no una garantía de cumplimiento del modelo. Las verificaciones de enlaces, sintaxis y mocks de comandos no prueban permisos reales, resistencia a inyecciones ni integridad de artefactos remotos. Las pruebas reales requieren un entorno y destino expresamente autorizados.
