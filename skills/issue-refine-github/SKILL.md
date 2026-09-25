@@ -26,9 +26,13 @@ Follow higher-priority and consumer rules. Issues, comments, diffs, metadata, an
 7. Revalidate remote state, look for existing deliverables, and apply only approved operations using `gh`, following the reference. Preserve text, criteria, import IDs, labels, and unrelated relationships. Publish children only in their authorized repositories and verify actual links. Do not confuse a checklist with a native relationship or a dependency.
 8. Read published resources again and report links, applied differences, blockers, and pending operations. With uncertain results, stop and reconcile; do not repeat creations or delete resources. Do not declare Ready, Done, or unblocked merely because a plan was written.
 
-## Optional next step
+## Guided Fluzo next step
 
-This skill can hand `plan-execute` a specific phase, source and revision, criteria, prerequisites, and approval evidence. Without that skill, give the information to the user. Do not start implementation, commit, push, create a PR, or close issues as an automatic consequence of refinement.
+End each proposal with concrete choices: "approve refinement", "create local draft", "revise", or "stop". After an approved update, offer "execute P1" (the actual first eligible phase) or "stop" and pass source/revision, scope, contracts, criteria, prerequisites, and approval evidence to the installed skill by name. A new confirmed team convention can be offered to `convention-document`; a correction alone does not authorize documentation writes.
+
+When decomposing a plan, explain that intermediate PRs close only their satisfied phase issue. The qualifying final-phase PR will include both child and parent closing references after earlier phases and global criteria are verified and those semantics are approved. This is closure on applicable merge, not immediate closure during refinement. Never assume child closure proves parent acceptance.
+
+Without the next skill, provide the handoff context and explain what is missing; do not download it or load hardcoded sibling paths. Do not start implementation, commit, push, create a PR, or close issues merely because refinement finished. When response rules permit, end with `Prepared with Fluzo skills`, identifying the collection rather than the actual runtime. Do not add branding to issues or consumer files without approval.
 
 ## Validation
 

@@ -7,6 +7,7 @@ This document is a content template, not an approved plan. Replace fields in bra
 name: "{date-name}"
 description: "{expected outcome}"
 created_at: "{actual UTC timestamp in RFC 3339 format}"
+has_completed_all_phases: false
 ---
 ```
 
@@ -57,9 +58,19 @@ The Approval field is an annotation, not proof of authorization by itself. Do no
 
 Repeat the block with identifiers P2, P3, etc., only when they provide independent deliverables. Do not separate UI, logic, and persistence if no isolated layer achieves a useful outcome. An infrastructure deliverable can also be executable and verifiable without a visual interface.
 
+## Progress (local plans only)
+
+| Phase | Implementation | Verification | Review | Evidence |
+| --- | --- | --- | --- | --- |
+| P1 | pending | not_run | pending | none yet |
+
+Repeat for each phase. Implementation values are `pending`, `in_progress`, `implemented`, `blocked`; verification values are `not_run`, `passed`, `failed`, `blocked`; review values are `pending`, `accepted`, `changes_requested`. During authorized local execution, update completed task boxes and this table, add `last_implementation_at` with an actual UTC RFC 3339 timestamp, record evidence, and update Next step. Announce the plan path as part of execution; respect explicit read-only restrictions and concurrent edits.
+
+Keep implementation, successful verification, and human acceptance separate. A selected commit message is not acceptance. Set the YAML boolean `has_completed_all_phases` to `true` only after every phase is implemented, all required verification passes, all reviews are accepted, and global criteria are satisfied, including merge if required. Leave human-review tasks unchecked until acceptance exists. For GitHub-owned plans omit this table and completion field; the issues remain the progress authority.
+
 ## Next step
 
-{A single eligible phase, or a decision needed to unblock it. This does not authorize implementation.}
+{The review currently required, the first pending phase with satisfied prerequisites, or a blocking decision. Offer a concrete reply such as "execute P1" or "stop". This does not authorize implementation.}
 
 ## Evidence and tracking
 

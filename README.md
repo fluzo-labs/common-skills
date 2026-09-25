@@ -2,9 +2,34 @@
 
 English | [Español](README.es.md)
 
-A collection of reusable skills for coding agents. Each skill provides instructions for a specific task and can be used in other projects without depending on this entire repository.
+Fluzo's collection of reusable skills for coding agents, supporting its agentic development platform. Each skill provides instructions for a specific task and can be used in other projects without depending on this entire repository.
 
 The collection covers issue refinement, local planning, single-phase execution, GitHub delivery review, conventional commits, and release preparation with changelogs. See the [catalog](skills/README.md) to choose a skill and review its dependencies.
+
+## Quickstart: the development lifecycle
+
+Install the collection from your project root with Node.js/npm, Git, and network access. Review the installer before running it; `npx` executes external code and this command does not pin a revision:
+
+```bash
+npx skills add fluzo-labs/common-skills --skill '*' --agent universal --copy
+```
+
+Confirm that your agent discovers the skills in `.agents/skills/`. GitHub steps also require authenticated `gh` and the relevant permissions. The following are **messages to your agent**, not terminal commands. Replace bracketed values with actual issue URLs, plan paths, or revisions, and send one step at a time:
+
+| Step | What to tell the agent |
+| --- | --- |
+| 1. Refine | "Use issue-refine-github to review [issue URL]. Propose scope, acceptance criteria, and any decomposition; do not modify GitHub yet." |
+| 2. Approve and plan | After reviewing the proposal: "Apply the issue changes we approved. Use plan-create if we need a local design draft; show it before saving." For a local-only task, start with "Use plan-create to plan [goal]." |
+| 3. Execute one phase | After approving the plan: "Use plan-execute to implement only P1 of [plan path or phase issue URL]. Update authorized local progress and report tests." |
+| 4. Review and commit | Review the diff and evidence, then: "Commit with option 2 using git-conventional-commit, only for the scope shown. Do not push." This chooses one of the three messages; it does not accept the phase automatically. |
+| 5. Prepare the PR | "Use delivery-review-github to propose the issue update and PR for this phase. Show the target branch, evidence, and closing references before publishing." |
+| 6. Publish and review | After approving those exact proposals: "Push the reviewed branch to [remote] and publish the approved PR and issue update. Do not merge." Review/merge remains a separate decision under the project's rules. |
+| 7. Continue or finish | After acceptance and integration where required: "Record the verified phase acceptance and propose the next eligible phase." Repeat execution and review; the qualifying final PR closes both its phase issue and parent on the applicable merge. |
+| 8. Prepare release | "Use release-prepare-github to prepare [version/component] from [base tag] to [candidate SHA], with changelog and evidence. Do not create tags or publish." Authorize exact tag/push/draft/publication operations only after reviewing the manifest. |
+
+At any point: "Use convention-document to document the confirmed agreement about [topic], with examples, exceptions, and an index entry. Do not commit." Reply "stop" whenever you do not want another step.
+
+For local-only work, skip issue/PR publication and keep progress in the approved plan. For GitHub plans, issues remain the progress authority; a local draft is optional, not a second backlog. These are guided instructions, not an unattended pipeline: each phase stops for review, and selecting a next step never grants unrelated permissions. See [Workflow](#workflow) for the full contracts and [Checks](#checks) for validation limits.
 
 ## Documentation
 
@@ -12,7 +37,7 @@ The following supporting guides are currently in Spanish:
 
 - [Usage guide](docs/USAGE.md): choosing skills, inputs/outputs, examples, and approvals.
 - [Proposed distribution](docs/DISTRIBUTION.md): SHA-pinned project copies, verifiable bundles, and a future installer plan. Distinguishes existing capabilities from proposals.
-- [Catalog](skills/README.md): instructions and dependencies for all six skills.
+- [Catalog](skills/README.md): instructions and dependencies for all seven skills.
 
 ## Structure
 
@@ -65,7 +90,7 @@ npx skills add fluzo-labs/common-skills --list
 npx skills add fluzo-labs/common-skills --skill '*' --agent universal --copy
 ```
 
-The first command lists available skills; the second installs all six into `.agents/skills/`, a path discovered by Crush. To select just one, replace `'*'` with its name. For the Crush-specific `.crush/skills/` destination, use `--agent crush`, bearing in mind that `.crush/` may be ignored by Git. Do not install the same skill into both destinations.
+The first command lists available skills; the second installs all seven into `.agents/skills/`, a path discovered by Crush. To select just one, replace `'*'` with its name. For the Crush-specific `.crush/skills/` destination, use `--agent crush`, bearing in mind that `.crush/` may be ignored by Git. Do not install the same skill into both destinations.
 
 We do not need to publish our own npm package: the external CLI installs from this public repository. However, `npx` may download and execute the installer; `--copy` neither pins versions nor guarantees security. These examples preserve confirmation prompts and do not install globally.
 
@@ -104,14 +129,15 @@ No provider, key, or permission configuration is required to distribute this col
 | --- | --- | --- |
 | Refine | [issue-refine-github](skills/issue-refine-github/SKILL.md) | Proposes keeping, expanding, or splitting an issue; does not create children by default. |
 | Plan | [plan-create](skills/plan-create/SKILL.md) | Proposes phases and saves a local plan only with approved content and destination. |
-| Execute | [plan-execute](skills/plan-execute/SKILL.md) | Implements one approved phase, verifies it, and stops for review. |
+| Execute | [plan-execute](skills/plan-execute/SKILL.md) | Implements one approved phase, updates local progress, offers three commit messages, and stops for review. |
 | Prepare delivery | [delivery-review-github](skills/delivery-review-github/SKILL.md) | Proposes an issue update and PR with evidence; publishes only what is authorized. |
+| Document agreements | [convention-document](skills/convention-document/SKILL.md) | Records confirmed conventions with examples, exceptions, and an updated index. |
 | Record changes | [git-conventional-commit](skills/git-conventional-commit/SKILL.md) | Creates a local commit only upon explicit request. |
 | Prepare release | [release-prepare-github](skills/release-prepare-github/SKILL.md) | Separates changelog, version/evidence preparation, and approved release publication; does not create implicit tags. |
 
 You do not need to follow every step. A small issue can be executed without splitting it; a task without GitHub can be planned and executed locally; an existing delivery can be reviewed without a plan created by these skills. Install each needed folder using the same copy procedure above, replacing the skill name.
 
-Integrations are optional and transmit data, not permissions: source and revision, goal, scope, phase, contracts, acceptance criteria, dependencies, verification, and approval evidence. No skill loads files from sibling folders or installs other skills. Refinement can use a `plan-create` draft, but GitHub remains the source of truth for states and dependencies; no second local board is maintained.
+Install all seven skills for the complete guided journey. Each folder remains independently readable; the guided commit step specifically requires the installed `git-conventional-commit` skill, resolved by name. If absent, that step stops without downloading it or substituting another committer. Handoffs transmit data, not permissions: source and revision, goal, scope, phase, contracts, acceptance criteria, dependencies, verification, and approval evidence. No skill loads files from sibling folders or installs other skills. Refinement can use a `plan-create` draft, but GitHub remains the source of truth for states and dependencies; no second local board is maintained.
 
 Example requests to the agent:
 
@@ -121,6 +147,18 @@ Example requests to the agent:
 - "Prepare the issue update and PR for this delivery without publishing them."
 - "Generate a draft changelog between this tag and this SHA without writing or publishing."
 - "Prepare the next release with a version proposal, evidence, and checksums; do not create tags."
+
+### Fluzo guided journey
+
+Refine an issue, approve its plan, execute one eligible phase, update progress, choose a commit, and prepare its PR. Each skill ends with a concrete next choice such as "execute P1", "commit with option 2", "prepare PR", or "stop". Choices do not run automatically. A confirmed convention can be documented with `convention-document` at any point.
+
+Local execution announces the exact plan path and automatically updates completed task boxes, evidence, timestamp, and next step within its authorized scope. Implementation, verification, and human review are separate states; failed or unexecuted checks stay visible. Read-only restrictions and concurrent edits stop unauthorized writes. Legacy plans are extended minimally without inferring acceptance from old checkboxes. GitHub plans retain remote progress as the source of truth.
+
+After a changed phase, offer three numbered messages following the installed commit skill. All three may use the same correct type; do not invent changes or commit types for variety. "Commit with option 2" authorizes only the reviewed message and scope, not push, PR publication, or phase acceptance. Without changes there is no commit proposal; incomplete work is clearly labeled provisional.
+
+Intermediate PRs close only their satisfied phase issue. The qualifying final-phase PR includes closing references for both the child and parent after all earlier phases are accepted/integrated and global criteria have evidence. A cancelled child is not proof of completion. Recheck the complete child set, target branch, cross-repository support, and closure approval. Closure occurs on an applicable merge, not when opening the PR; if automatic closure is unsupported, propose explicit post-merge reconciliation instead.
+
+The discreet response footer `Prepared with Fluzo skills` brands the instruction collection, not the actual runtime or model. It respects higher-priority response rules and is not inserted into commits or consumer files without approval. No invented logos, mascots, or promotional links are required.
 
 ### Activation and approvals
 
@@ -154,7 +192,7 @@ Preparation includes a manifest of revisions, criteria, tests, artifacts, checks
 - Keep both README versions synchronized when changing installation instructions or workflows.
 - The language of skill instructions does not dictate their outputs: plans, issues, and messages follow consumer project rules or, if absent, the user's language.
 - One concrete responsibility per skill; avoid duplicated generic instructions.
-- Self-contained skills: no personal paths, sibling-folder dependencies, or references to internal files of this repository.
+- Self-contained files: no personal paths, sibling-file dependencies, or references to internal files of this repository. Guided commits resolve the installed commit skill by name; missing integration blocks only that handoff.
 - Declare required tools and versions in each skill; do not assume the consumer shares your environment.
 - Respect consumer project context and instructions. Skills must not bypass permissions or impose changes unrelated to their task.
 - Do not include secrets or real data. Use fictional examples and environment variables where appropriate.

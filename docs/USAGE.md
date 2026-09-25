@@ -1,10 +1,10 @@
-# Uso de las skills
+# Uso de las skills de Fluzo
 
 ## Qué instalas
 
 Una skill es una carpeta de instrucciones, no un servicio ni un comando de shell. El agente lee `SKILL.md` y consulta sus referencias locales cuando corresponde. No hay un ejecutor central que encadene las skills, vigile GitHub o conceda permisos.
 
-Las seis skills están redactadas en inglés. Sus resultados respetan el idioma del proyecto consumidor o, si no está definido, el del usuario. No hace falta instalar toda la colección: cada carpeta funciona por separado.
+Las siete skills están redactadas en inglés. Sus resultados respetan el idioma del proyecto consumidor o, si no está definido, el del usuario. No hace falta instalar toda la colección: cada carpeta funciona por separado.
 
 Consulta el [catálogo](../skills/README.md) para ver dependencias y el [README](../README.md) para copiar una skill o configurar su carga en Crush. Para equipos, sigue la [propuesta de distribución versionada](DISTRIBUTION.md), que distingue lo disponible de lo pendiente de construir.
 
@@ -20,7 +20,7 @@ Necesitas Node.js/npm con `npx`, Git y acceso a npm y GitHub, con versiones comp
 npx skills add fluzo-labs/common-skills --list
 ```
 
-Deberían aparecer las seis skills del [catálogo](../skills/README.md). No uses `--full-depth`: no hace falta para esta estructura y puede descubrir la plantilla de autoría fuera de `skills/`.
+Deberían aparecer las siete skills del [catálogo](../skills/README.md). No uses `--full-depth`: no hace falta para esta estructura y puede descubrir la plantilla de autoría fuera de `skills/`.
 
 ### 2. Instalar por proyecto
 
@@ -30,7 +30,7 @@ Para instalar una skill en `.agents/skills/`, una ruta que Crush descubre y que 
 npx skills add fluzo-labs/common-skills --skill release-prepare-github --agent universal --copy
 ```
 
-Para instalar las seis en ese destino:
+Para instalar las siete en ese destino:
 
 ```bash
 npx skills add fluzo-labs/common-skills --skill '*' --agent universal --copy
@@ -103,7 +103,14 @@ En Crush, `user-invocable: true` permite invocación manual y las skills de proy
 | Diseñar una tarea | [plan-create](../skills/plan-create/SKILL.md) | Objetivo y proyecto, opcionalmente una issue | Plan por fases; archivo solo con contenido y destino aprobados |
 | Implementar trabajo aprobado | [plan-execute](../skills/plan-execute/SKILL.md) | Fase, plan/issue, revisión y autorización | Implementación de una fase y evidencia de verificación |
 | Preparar revisión de código | [delivery-review-github](../skills/delivery-review-github/SKILL.md) | Cambios, issue, fase y resultados reales | Comentario y PR propuestos; publicación solo aprobada |
+| Documentar acuerdos | [convention-document](../skills/convention-document/SKILL.md) | Convención confirmada, alcance y permiso de escritura | Documento con ejemplos/excepciones e índice actualizado |
 | Preparar una versión | [release-prepare-github](../skills/release-prepare-github/SKILL.md) | Modo, componente, rango/SHA y política de versión | Changelog, preparación o release expresamente autorizada |
+
+## Recorrido guiado
+
+Para el recorrido completo instala las siete skills. Cada paso ofrece una respuesta concreta: «aprobar y guardar», «ejecutar P1», «commit con opción 2», «preparar PR» o «detenerse». El agente no encadena esas operaciones sin autorización. El paso de commit resuelve y lee `git-conventional-commit` instalada por nombre; si falta, conserva el trabajo y detiene ese handoff sin descargarla ni copiar su ejecutor.
+
+Fluzo es nuestra plataforma de desarrollo agéntica y la marca de la colección. El pie de respuesta `Prepared with Fluzo skills` no identifica al runtime real ni inventa autoría del modelo. Se omite si las reglas superiores lo requieren y no se inserta en archivos, commits, PRs o issues sin aprobación.
 
 ## Ejemplos por skill
 
@@ -129,13 +136,21 @@ El destino por defecto es `.agents/plans/YYYY-MM-DD-name/YYYY-MM-DD-name-plan.md
 
 > Usa plan-execute para implementar solo P1 del plan aprobado en [ruta real]. Conserva los cambios previos y presenta las verificaciones antes de avanzar.
 
-También acepta una issue/sub-issue con alcance aprobado y verificable. Revisa vigencia y prerrequisitos antes de editar. Termina con resultados por criterio, separando verificado, fallido, no ejecutado y bloqueado. No avanza a P2 aunque parezca sencillo.
+También acepta una issue/sub-issue con alcance aprobado y verificable. Por defecto selecciona la primera fase pendiente con prerrequisitos satisfechos, sin saltarse una revisión necesaria. La ejecución anuncia y actualiza el plan local autorizado: checkboxes reales, evidencia, fecha y siguiente paso. Implementación, verificación y aceptación humana son estados independientes; un test fallido no se convierte en éxito ni un commit en aceptación. Respeta planes de solo lectura y ediciones concurrentes; no duplica estados de GitHub en local.
+
+Al terminar presenta tres mensajes numerados según `git-conventional-commit`, incluso del mismo tipo si es el correcto. «Commit con opción 2» invoca esa skill con mensaje y alcance revisados, sin autorizar push ni PR. Sin cambios no inventa propuestas; si falta la skill las propuestas son provisionales y el handoff se detiene. No avanza a P2 aunque parezca sencillo.
 
 ### Entrega a revisión
 
 > Usa delivery-review-github para preparar la actualización de [issue real] y la PR de esta fase. Incluye alcance, motivación, decisiones, pruebas, riesgos y pendientes. No publiques todavía.
 
-Consulta una PR existente antes de crear otra. La propuesta identifica base/head, revisión probada y semántica de cierre. Una fase parcial referencia la issue sin cerrarla; completar una hija no cierra su padre. El formato de la herramienta puede exigir una PR breve: la evidencia detallada puede quedar enlazada desde la issue.
+Consulta una PR existente antes de crear otra. La propuesta identifica base/head, revisión probada y semántica de cierre. Una entrega parcial referencia la issue sin cerrarla; una fase intermedia satisfecha cierra solo su hija. La PR de la última fase incluye cierres de hija y padre cuando todas las fases anteriores están aceptadas/integradas y hay evidencia de los criterios globales. Revisa hijas canceladas, cambios concurrentes, rama destino y soporte entre repositorios; abrir la PR no cierra nada, el cierre se produce al merge aplicable. El formato de la herramienta puede exigir una PR breve: la evidencia detallada puede quedar enlazada desde la issue.
+
+### Documentar una convención
+
+> Usa convention-document para registrar el acuerdo que acabamos de confirmar sobre [tema]. Incluye motivación, ejemplos reales, excepciones y actualiza el índice correspondiente. No cambies código ni hagas commit.
+
+Busca primero documentación existente para actualizarla. No convierte comentarios ambiguos en reglas permanentes, inventa ejemplos del repositorio ni exporta conversaciones privadas. Adapta la estructura al consumidor y ofrece revisión, commit mediante la skill instalada o retorno a la fase actual.
 
 ### Release y changelog
 
@@ -156,8 +171,11 @@ issue existente -> propuesta de refinamiento
                 -> borrador local opcional
                 -> aprobación y actualización del backlog
                 -> ejecución de una fase aprobada
+                -> progreso local y tres opciones de commit
+                -> commit autorizado con la skill instalada
                 -> evidencia y propuesta de PR
                 -> publicación/revisión/merge autorizados
+                -> siguiente fase o cierre de padre en el merge final
                 -> preparación de release
                 -> aprobación específica de tag y publicación
 ```
@@ -170,7 +188,7 @@ También puedes empezar directamente en cualquier paso. El traspaso incluye fuen
 | --- | --- |
 | Analizar o proponer | Escribir archivos o mutar GitHub |
 | Guardar un plan aprobado | Implementarlo o publicarlo remotamente |
-| Implementar una fase | Commit, push, PR o siguiente fase |
+| Implementar una fase y su seguimiento local anunciado | Commit, push, PR, aceptación humana o siguiente fase |
 | Crear un commit | Push o tag |
 | Abrir una PR | Merge, cerrar una issue parcial o publicar una release |
 | Fusionar una PR de release | Tag o publicación, salvo una autorización explícita aplicable al flujo |

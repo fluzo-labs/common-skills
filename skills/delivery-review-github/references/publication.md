@@ -31,7 +31,9 @@ Do not use `gh pr create --dry-run` as a safe simulation: it may push. Preview a
 
 ## Create or update the PR
 
-Before publishing, verify that the branch and reviewed SHA already exist on the approved remote. If a commit or push is missing, report it and obtain separate authorization for that operation, following consumer rules. Do not use `--fill` to turn unreviewed historical messages into a public description.
+Before publishing, verify that the branch and reviewed SHA already exist on the approved remote. If a commit or push is missing, report it and obtain separate authorization for that operation, following consumer rules. For commits, resolve and invoke the installed `git-conventional-commit` skill by name with the selected message and reviewed scope; if unavailable, stop that step rather than implementing an alternative committer. Do not use `--fill` to turn unreviewed historical messages into a public description.
+
+Before approving a final-phase PR, apply the [final-phase closure gate](delivery-template.md): verify the parent and complete child set, acceptance evidence, default branch, and cross-repository closing support. Include separate approved child and parent closing references only when eligible. Intermediate or incomplete deliveries must not close the parent. Read back closing references after publication; reconcile actual states after an authorized merge/status check rather than closing issues immediately.
 
 Confirm capabilities with local help. Explicit `--head` avoids the interactive flow offering a push or fork; for organization-owned forks, check CLI support and stop if the destination is ambiguous. Never create a fork automatically.
 

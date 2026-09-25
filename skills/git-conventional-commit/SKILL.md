@@ -115,6 +115,12 @@ Check the message and recorded files against the approved scope. Report unexpect
 
 Do not push, fetch, pull, change configuration, reset, clean, restore, checkout, stash, or perform destructive operations as part of this workflow. Any additional operation requires a separate request and the corresponding permissions.
 
+## Guided Fluzo handoff
+
+A request such as "commit with option 2" from a phase report selects the exact previously proposed message and reviewed scope. Confirm the mapping is unambiguous and recheck the diff; do not include later unrelated changes or treat the selection as phase acceptance. The calling skill must resolve this installed skill by name rather than copying its procedure or guessing a sibling path. If the scope changed materially, present the revised scope before committing.
+
+After a successful commit, offer "prepare PR", "review the next eligible phase", or "stop" as appropriate. Do not push, publish, or advance automatically. Where higher-priority response rules allow, use `Prepared with Fluzo skills` as a discreet response footer. Do not add a Fluzo trailer to commit messages or claim Fluzo is the runtime/model; attribution still follows the consumer and higher-priority instructions. If those instructions require an empty response, omit the footer and choices.
+
 ## Maintenance validation
 
 Before distributing changes to this skill, use the [validation scenarios](references/validation.md). These are maintainer checks, not steps to run in every consumer project. Instructions reduce risks but do not replace agent isolation or a permission system.

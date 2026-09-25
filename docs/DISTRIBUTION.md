@@ -2,7 +2,7 @@
 
 ## Estado actual
 
-Disponible: seis carpetas autocontenidas en `skills/`, plantilla de autoría, catálogo y [guía de uso](USAGE.md). La estructura pública es reconocida por la CLI externa `npx skills`; documentamos sus comandos de listado e instalación, pero la prueba aislada de instalación de esta colección sigue pendiente. También se pueden copiar carpetas revisadas o cargar una copia local desde Crush, como explica el [README](../README.md).
+Disponible: siete carpetas autocontenidas en `skills/`, plantilla de autoría, catálogo y [guía de uso](USAGE.md). La estructura pública es reconocida por la CLI externa `npx skills`; documentamos sus comandos de listado e instalación, pero la prueba aislada de instalación de esta colección sigue pendiente. También se pueden copiar carpetas revisadas o cargar una copia local desde Crush, como explica el [README](../README.md).
 
 Lo siguiente es una propuesta de arquitectura, no un instalador ni un pipeline propios ya implementados. Esta colección no implementa gestor de actualizaciones, lockfile de instalación, bundles de release ni CI de empaquetado; los mecanismos que pueda proporcionar la CLI externa deben verificarse por separado. Crear esta documentación no publica una versión ni crea tags.
 
@@ -12,7 +12,7 @@ Usar **GitHub como origen versionado y copias locales por proyecto fijadas a un 
 
 Después, evaluar bundles de GitHub Releases y qué controles adicionales hacen falta para verificar integridad, mostrar el diff y aprobar actualizaciones. Solo implementar un instalador propio si la herramienta externa no cubre los requisitos; los contratos siguientes describen esos requisitos, no garantías ya ofrecidas por `npx skills`.
 
-La unidad de instalación sigue siendo cada carpeta de skill completa. Para empezar, una versión de la colección es más sencilla que seis ciclos independientes: una release puede distribuir un bundle completo y permitir seleccionar qué skills instalar. Si en el futuro hay consumidores y cadencias realmente diferentes, se puede evaluar versionado individual sin cambiar el formato de las carpetas.
+La unidad de instalación sigue siendo cada carpeta de skill completa. Para empezar, una versión de la colección es más sencilla que siete ciclos independientes: una release puede distribuir un bundle completo y permitir seleccionar qué skills instalar. Si en el futuro hay consumidores y cadencias realmente diferentes, se puede evaluar versionado individual sin cambiar el formato de las carpetas.
 
 El proyecto consumidor debe poder conservar las skills instaladas bajo control de versiones para que un cambio de instrucciones sea revisable como cualquier cambio de código. El destino predeterminado propuesto es `.agents/skills/` para agentes que lo soporten; otros destinos se seleccionan explícitamente. No se debe asumir soporte universal por usar `SKILL.md`.
 
@@ -86,7 +86,7 @@ Tras validar el flujo básico, documentar compatibilidad real por agente y ofrec
 ## Criterios de aceptación de la futura distribución
 
 - La misma revisión produce los mismos archivos instalados y un inventario verificable.
-- El consumidor puede instalar una sola skill sin dependencias entre carpetas.
+- El consumidor puede instalar una sola skill sin dependencias de archivos entre carpetas. El recorrido completo recomienda las siete; su paso de commit requiere `git-conventional-commit` instalada por nombre y se detiene si falta, sin descargarla automáticamente.
 - Ninguna descarga ejecuta código ni autoriza herramientas del agente.
 - Una actualización muestra diferencias y no pierde cambios locales.
 - No se extraen archivos fuera del destino ni se cargan respaldos o plantillas como skills reales.

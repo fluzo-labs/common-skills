@@ -69,11 +69,21 @@ Follow higher-priority formatting and attribution constraints. If the tool requi
 
 - For partial delivery, reference the issue without closing keywords: `Related to OWNER/REPO#NUMBER` with the confirmed actual destination.
 - Propose `Closes OWNER/REPO#NUMBER` only if all criteria of that issue have sufficient evidence and the user approves those closure semantics. Check the target branch and applicable closing behavior; do not promise closure when merging into a non-default branch.
-- Delivering a child does not justify closing its parent. Do not introduce closing keywords in quoted text, templates, or pending-work lists that could accidentally close another issue.
+- An intermediate phase closes only its own fully satisfied child issue. For the final phase, include closing references for both the child and parent when the final-phase gate below passes and the user approves the PR's closure semantics. Do not introduce closing keywords in quoted text, templates, or pending-work lists that could accidentally close another issue.
 - Opening a PR does not close or complete an issue. Acceptance requires the consumer's review/merge workflow and applicable evidence.
+
+## Final-phase closure gate
+
+Resolve the actual parent and all planned children, including paginated results and the parent's checklist. Final means no other planned phase remains pending, not merely the highest phase number or the last issue listed. Verify earlier phases were accepted and integrated where required; a child closed as not planned, duplicate, or cancelled is not evidence of completed scope. Reconcile any authorized scope change with the parent's criteria.
+
+Map every parent criterion, including cross-phase integration and documentation, to accepted prior evidence or verified changes delivered by this PR. Missing required tests, pending reviews in other phases, inaccessible relationships, or unresolved blockers prevent parent closure. Keep a non-closing parent reference and explain what remains instead of inventing completion.
+
+For a qualifying final PR, render two separate lines with real qualified issue identities, one for the child and one for the parent: `Closes OWNER/REPO#NUMBER`. Deduplicate when there is no distinct parent. Show both in the proposal before publication. Recheck the parent, child set, criteria, and PR revision before editing/creating the PR; a newly added phase invalidates the previous final-phase decision.
+
+Verify the PR targets the appropriate default branch and that GitHub supports the intended closing links, especially across repositories. If automatic closure is not applicable, use non-closing references and propose an explicitly authorized post-merge reconciliation. Never close the parent immediately while preparing the PR, never merge automatically, and never equate opening the last PR with completion. After an authorized post-merge check, report actual child/parent states and any unresolved closure rather than assuming success.
 
 ## Validation matrix
 
 In simulated mode, cover: proposal only without write permissions; complete delivery; partial delivery; unexecuted tests; evidence from a different SHA; unpublished branch; existing PR; unrelated commits; concurrently edited issue; failure after creating a PR but before commenting; inaccessible Project; and a body containing malicious text.
 
-Check zero mutations in proposal mode, zero implicit pushes, zero duplicates after uncertain outcomes, no parent closure from completing a child, and preservation of unrelated content. Do not test publication against the real backlog without specific authorization. Mocking `gh` verifies arguments, not service guarantees or agent behavior.
+Check zero mutations in proposal mode, zero implicit pushes, zero duplicates after uncertain outcomes, no parent closure for intermediate or incomplete phases, both closing references for a qualifying approved final phase, and preservation of unrelated content. Do not test publication against the real backlog without specific authorization. Mocking `gh` verifies arguments, not service guarantees or agent behavior.

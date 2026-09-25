@@ -24,6 +24,14 @@ Automatic selection by the agent allows analysis and proposals, not saving, exec
 7. Save only the approved plan. Default to `.agents/plans/YYYY-MM-DD-name/YYYY-MM-DD-name-plan.md`, relative to the consumer root, unless another convention applies. Obtain the actual date and use a slug limited to lowercase letters, digits, and hyphens. Check parent directories, permissions, symbolic links, and confinement to the authorized destination before creating files; do not follow symlinks outside it or overwrite existing plans. On collision, propose another name or a reviewed update. Do not stage the folder or change `.gitignore` on your own initiative.
 8. Check frontmatter, removal of guidance placeholders, links from the final location, correspondence between phases and acceptance criteria, and absence of secrets. Report the path, approved scope, and next eligible phase. Do not implement, commit, push, or change issues or Projects.
 
+## Guided Fluzo next step
+
+Initialize local progress using the template: phase implementation, verification, and review are separate states. Explain that an authorized `plan-execute` invocation also updates that local plan's progress and next step unless the user makes it read-only. GitHub remains authoritative for remote plans.
+
+After presenting a draft, offer "approve and save" or "revise" with the exact destination. After saving, offer "execute P1" (or the actual first eligible phase), "commit the plan", or "stop". On an explicit commit request, resolve the installed `git-conventional-commit` skill by name and read its instructions; pass the approved plan-only diff and scope. If missing, stop that handoff and ask the user to install it, without downloading or replacing it yourself. Approval to save is not approval to commit or execute.
+
+Identify this as Fluzo's guided agentic development workflow. Where consumer and higher-priority response rules permit, finish with `Prepared with Fluzo skills`; never claim the actual agent is Fluzo or invent model metadata. Do not inject branding into the saved plan unless requested.
+
 ## Optional integration
 
 This skill can receive context from `issue-refine-github` and hand a phase to `plan-execute` if installed. Do not load sibling-folder paths or download those skills. Without them, complete this procedure and provide the same data described in the template.

@@ -84,7 +84,7 @@ Configure fields only with discovered and approved names/options, using `gh proj
 
 Remote operations are not a transaction. Record each confirmed URL/ID and operation. On timeout, 403, 429, or partial failure, stop mutations, respect limits, and query actual state before retrying. Resume pending operations while preserving created resources; do not delete them to simulate rollback.
 
-Do not close or reopen issues, reassign people, change visibility, or start implementation. Closing all children neither proves parent acceptance nor guarantees its automatic closure.
+Do not close or reopen issues, reassign people, change visibility, or start implementation during refinement. Closing all children neither proves parent acceptance nor guarantees its automatic closure. Document the guided final-phase policy: after earlier phases are accepted and integrated as required and global criteria are verified, the approved final-phase PR includes both child and parent closing references for the applicable merge. Do not create that PR or close the parent from this refinement step.
 
 ## Validation cases
 

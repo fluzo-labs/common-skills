@@ -2,15 +2,40 @@
 
 [English](README.md) | Español
 
-Colección de skills reutilizables para agentes de programación. Cada skill contiene instrucciones para una tarea concreta y puede incorporarse a otros proyectos sin depender de este repositorio completo.
+Colección de skills reutilizables de Fluzo para agentes de programación, como parte de su plataforma de desarrollo agéntica. Cada skill contiene instrucciones para una tarea concreta y puede incorporarse a otros proyectos sin depender de este repositorio completo.
 
 La colección cubre refinamiento de issues, planificación local, ejecución de una fase, revisión de entregas para GitHub, commits convencionales y preparación de releases con changelog. Consulta el [catálogo](skills/README.md) para elegir la skill y sus dependencias.
+
+## Inicio rápido: ciclo de vida de desarrollo
+
+Instala la colección desde la raíz de tu proyecto, con Node.js/npm, Git y acceso a red. Revisa el instalador antes de ejecutarlo; `npx` ejecuta código externo y este comando no fija una revisión:
+
+```bash
+npx skills add fluzo-labs/common-skills --skill '*' --agent universal --copy
+```
+
+Confirma que tu agente descubre las skills en `.agents/skills/`. Los pasos de GitHub requieren además `gh` autenticado y los permisos correspondientes. Los siguientes son **mensajes para tu agente**, no comandos de terminal. Sustituye los campos entre corchetes por URLs de issues, rutas de planes o revisiones reales, y envía un paso cada vez:
+
+| Paso | Qué decirle al agente |
+| --- | --- |
+| 1. Refinar | «Usa issue-refine-github para revisar [URL de issue]. Propón alcance, criterios de aceptación y posible descomposición; todavía no modifiques GitHub». |
+| 2. Aprobar y planificar | Tras revisar la propuesta: «Aplica los cambios de la issue que hemos aprobado. Usa plan-create si necesitamos un borrador local de diseño; muéstralo antes de guardarlo». Para una tarea solo local, empieza con «Usa plan-create para planificar [objetivo]». |
+| 3. Ejecutar una fase | Tras aprobar el plan: «Usa plan-execute para implementar solo P1 de [ruta de plan o URL de issue de fase]. Actualiza el progreso local autorizado e informa de las pruebas». |
+| 4. Revisar y hacer commit | Revisa diff y evidencias y después: «Commit con opción 2 usando git-conventional-commit, únicamente para el alcance mostrado. No hagas push». Selecciona uno de los tres mensajes; no acepta automáticamente la fase. |
+| 5. Preparar la PR | «Usa delivery-review-github para proponer la actualización de la issue y la PR de esta fase. Muestra rama destino, evidencias y referencias de cierre antes de publicar». |
+| 6. Publicar y revisar | Tras aprobar esas propuestas exactas: «Haz push de la rama revisada a [remoto] y publica la PR y actualización de issue aprobadas. No hagas merge». Revisión y merge siguen siendo decisiones separadas bajo las reglas del proyecto. |
+| 7. Continuar o terminar | Tras la aceptación e integración cuando corresponda: «Registra la aceptación verificada de la fase y propón la siguiente fase elegible». Repite ejecución y revisión; la PR final elegible cierra su issue de fase y la padre al merge aplicable. |
+| 8. Preparar release | «Usa release-prepare-github para preparar [versión/componente] desde [tag base] hasta [SHA candidato], con changelog y evidencias. No crees tags ni publiques». Autoriza las operaciones exactas de tag/push/draft/publicación solo después de revisar el manifiesto. |
+
+En cualquier momento: «Usa convention-document para documentar el acuerdo confirmado sobre [tema], con ejemplos, excepciones y entrada en el índice. No hagas commit». Responde «detenerse» cuando no quieras continuar con otro paso.
+
+Para trabajo solo local, omite la publicación de issues/PRs y conserva el progreso en el plan aprobado. Para planes de GitHub, las issues son la autoridad del progreso; el borrador local es opcional, no otro backlog. Son instrucciones guiadas, no un pipeline desatendido: cada fase se detiene para revisión y elegir un siguiente paso no concede permisos ajenos. Consulta [Flujo de trabajo](#flujo-de-trabajo) para los contratos completos y [Comprobaciones](#comprobaciones) para los límites de validación.
 
 ## Documentación
 
 - [Guía de uso](docs/USAGE.md): qué skill elegir, entradas/salidas, ejemplos y aprobaciones.
 - [Distribución propuesta](docs/DISTRIBUTION.md): copias por proyecto fijadas a SHA, bundles verificables y plan del futuro instalador. Distingue funcionalidades actuales de propuestas.
-- [Catálogo](skills/README.md): instrucciones y dependencias de las seis skills.
+- [Catálogo](skills/README.md): instrucciones y dependencias de las siete skills.
 
 ## Organización
 
@@ -63,7 +88,7 @@ npx skills add fluzo-labs/common-skills --list
 npx skills add fluzo-labs/common-skills --skill '*' --agent universal --copy
 ```
 
-El primer comando lista las skills; el segundo instala las seis en `.agents/skills/`, una ruta descubierta por Crush. Para seleccionar solo una, sustituye `'*'` por su nombre. Para el destino específico `.crush/skills/`, usa `--agent crush`, teniendo en cuenta que `.crush/` puede estar ignorado por Git. No instales la misma skill en ambos destinos.
+El primer comando lista las skills; el segundo instala las siete en `.agents/skills/`, una ruta descubierta por Crush. Para seleccionar solo una, sustituye `'*'` por su nombre. Para el destino específico `.crush/skills/`, usa `--agent crush`, teniendo en cuenta que `.crush/` puede estar ignorado por Git. No instales la misma skill en ambos destinos.
 
 No necesitamos publicar un paquete npm propio: la CLI externa instala desde este repositorio público. `npx` sí puede descargar y ejecutar el instalador; `--copy` no fija versiones ni garantiza seguridad. Los ejemplos mantienen confirmaciones y no instalan globalmente.
 
@@ -102,14 +127,15 @@ No es necesario configurar proveedores, claves ni permisos para distribuir esta 
 | --- | --- | --- |
 | Refinar | [issue-refine-github](skills/issue-refine-github/SKILL.md) | Propone conservar, ampliar o dividir una issue; no crea hijas por defecto. |
 | Planificar | [plan-create](skills/plan-create/SKILL.md) | Propone fases y guarda un plan local solo con contenido y destino aprobados. |
-| Ejecutar | [plan-execute](skills/plan-execute/SKILL.md) | Implementa una fase aprobada, verifica y se detiene para revisión. |
+| Ejecutar | [plan-execute](skills/plan-execute/SKILL.md) | Implementa una fase aprobada, actualiza progreso local, ofrece tres mensajes de commit y se detiene para revisión. |
 | Preparar entrega | [delivery-review-github](skills/delivery-review-github/SKILL.md) | Propone actualización de issue y PR con evidencia; publica solo lo autorizado. |
+| Documentar acuerdos | [convention-document](skills/convention-document/SKILL.md) | Registra convenciones confirmadas con ejemplos, excepciones e índice actualizado. |
 | Registrar cambios | [git-conventional-commit](skills/git-conventional-commit/SKILL.md) | Crea un commit local únicamente ante petición explícita. |
 | Preparar release | [release-prepare-github](skills/release-prepare-github/SKILL.md) | Separa changelog, versión/evidencia y publicación de una release aprobada; no crea tags implícitos. |
 
 No necesitas recorrer todos los pasos. Una issue pequeña puede ejecutarse sin dividirla; una tarea sin GitHub puede planificarse y ejecutarse localmente; una entrega existente puede revisarse sin un plan creado por estas skills. Instala cada carpeta necesaria mediante el mismo procedimiento de copia anterior, sustituyendo el nombre de la skill.
 
-Las integraciones son opcionales y transmiten datos, no permisos: fuente y revisión, objetivo, alcance, fase, contratos, aceptación, dependencias, verificación y evidencia de aprobación. Ninguna skill carga archivos de carpetas hermanas ni instala otras. El refinamiento admite un borrador de `plan-create`, pero GitHub sigue siendo la fuente de verdad de estados y dependencias; no se mantiene otro tablero local.
+Instala las siete skills para el recorrido guiado completo. Cada carpeta sigue siendo legible por separado; el paso guiado de commit requiere específicamente `git-conventional-commit` instalada, resuelta por nombre. Si falta, se detiene ese paso sin descargarla ni sustituir su ejecutor. Los traspasos transmiten datos, no permisos: fuente y revisión, objetivo, alcance, fase, contratos, aceptación, dependencias, verificación y evidencia de aprobación. Ninguna skill carga archivos de carpetas hermanas ni instala otras. El refinamiento admite un borrador de `plan-create`, pero GitHub sigue siendo la fuente de verdad de estados y dependencias; no se mantiene otro tablero local.
 
 Ejemplos de peticiones al agente:
 
@@ -119,6 +145,18 @@ Ejemplos de peticiones al agente:
 - «Prepara la actualización de la issue y la PR de esta entrega, sin publicarlas».
 - «Genera un borrador de changelog entre este tag y este SHA, sin escribir ni publicar».
 - «Prepara la próxima release con propuesta de versión, evidencias y checksums; no crees tags».
+
+### Recorrido guiado de Fluzo
+
+Refina una issue, aprueba su plan, ejecuta una fase elegible, actualiza el progreso, elige un commit y prepara su PR. Cada skill termina con una elección concreta como «ejecutar P1», «commit con opción 2», «preparar PR» o «detenerse». Las opciones no se ejecutan automáticamente. Un acuerdo confirmado puede documentarse con `convention-document` en cualquier momento.
+
+La ejecución local anuncia la ruta exacta del plan y actualiza automáticamente tareas completadas, evidencias, fecha y siguiente paso dentro del alcance autorizado. Implementación, verificación y revisión humana son estados distintos; las comprobaciones fallidas o no ejecutadas siguen visibles. Las restricciones de solo lectura y ediciones concurrentes detienen escrituras no autorizadas. Los planes antiguos se amplían mínimamente sin deducir aceptación de checkboxes previos. Los planes de GitHub mantienen el progreso remoto como fuente de verdad.
+
+Tras una fase con cambios, se ofrecen tres mensajes numerados siguiendo la skill de commits instalada. Los tres pueden usar el mismo tipo correcto; no se inventan cambios ni tipos por variedad. «Commit con opción 2» autoriza solo el mensaje y alcance revisados, no push, publicación de PR ni aceptación de la fase. Sin cambios no se propone commit; el trabajo incompleto se marca claramente como provisional.
+
+Las PRs intermedias cierran solo su issue de fase satisfecha. La PR final elegible incluye cierres de hija y padre tras aceptar/integrar las fases anteriores y disponer de evidencia de los criterios globales. Una hija cancelada no prueba finalización. Se revalida el conjunto completo de hijas, la rama destino, el soporte entre repositorios y la aprobación del cierre. El cierre ocurre al merge aplicable, no al abrir la PR; si no está soportado automáticamente, se propone reconciliación explícita posterior al merge.
+
+El cierre discreto de respuesta `Prepared with Fluzo skills` identifica la colección de instrucciones, no el runtime ni el modelo real. Respeta reglas de respuesta superiores y no se inserta en commits ni archivos del consumidor sin aprobación. No se inventan logos, mascotas ni enlaces promocionales.
 
 ### Activación y aprobaciones
 
@@ -152,7 +190,7 @@ La preparación incluye un manifiesto de revisiones, criterios, pruebas, artefac
 - Mantén sincronizadas ambas versiones del README cuando cambien las instrucciones de instalación o los flujos de trabajo.
 - El idioma de las skills no impone el de sus resultados: planes, issues y mensajes siguen las reglas del proyecto consumidor o, si no existen, el idioma del usuario.
 - Una responsabilidad concreta por skill; evita instrucciones genéricas duplicadas.
-- Skills autocontenidas: sin rutas personales, dependencias de carpetas hermanas ni referencias a archivos internos de este repositorio.
+- Archivos autocontenidos: sin rutas personales, dependencias de archivos hermanos ni referencias a archivos internos de este repositorio. Los commits guiados resuelven la skill de commits instalada por nombre; su ausencia bloquea solo ese handoff.
 - Declara herramientas y versiones requeridas en cada skill; no supongas que el consumidor comparte tu entorno.
 - El contexto y las instrucciones del proyecto consumidor deben respetarse. Las skills no deben intentar saltarse permisos ni imponer cambios ajenos a su tarea.
 - No incluyas secretos ni datos reales. Usa ejemplos ficticios y variables de entorno cuando corresponda.
