@@ -59,7 +59,7 @@ Todas las skills están redactadas de forma independiente y son autocontenidas: 
 
 ## Convenciones y riesgos
 
-- Escribe los archivos `SKILL.md`, sus referencias, ejemplos y la plantilla de autoría en inglés. Mantén la documentación de mantenimiento en español. Respeta `.editorconfig`: UTF-8, LF, salto de línea final y dos espacios de indentación. Markdown permite espacios finales para saltos de línea explícitos.
+- Escribe los archivos `SKILL.md`, sus referencias, ejemplos, la plantilla de autoría y `README.md` en inglés. Conserva `README.es.md` como versión española y mantén ambas versiones sincronizadas y enlazadas entre sí. El resto de documentación de mantenimiento permanece en español. Respeta `.editorconfig`: UTF-8, LF, salto de línea final y dos espacios de indentación. Markdown permite espacios finales para saltos de línea explícitos.
 - `.crush/` está ignorado por completo porque contiene estado local. No guardes allí skills que deban distribuirse; usa `skills/`.
 - Los ejemplos `.env.example` y `.env.*.example` son versionables, pero no deben contener credenciales reales.
 - No amplíes automáticamente permisos ni añadas configuración de proveedores para distribuir skills.

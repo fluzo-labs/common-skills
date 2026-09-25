@@ -2,13 +2,15 @@
 
 ## Estado actual
 
-Disponible: seis carpetas autocontenidas en `skills/`, plantilla de autoría, catálogo y [guía de uso](USAGE.md). La distribución actual consiste en copiar carpetas revisadas o cargar una copia local desde Crush, como explica el [README](../README.md).
+Disponible: seis carpetas autocontenidas en `skills/`, plantilla de autoría, catálogo y [guía de uso](USAGE.md). La estructura pública es reconocida por la CLI externa `npx skills`; documentamos sus comandos de listado e instalación, pero la prueba aislada de instalación de esta colección sigue pendiente. También se pueden copiar carpetas revisadas o cargar una copia local desde Crush, como explica el [README](../README.md).
 
-Lo siguiente es una propuesta de arquitectura, no un instalador ni un pipeline ya implementado. No hay gestor de actualizaciones, lockfile de instalación, bundles de release o CI de empaquetado en esta colección. Crear esta documentación no publica una versión ni crea tags.
+Lo siguiente es una propuesta de arquitectura, no un instalador ni un pipeline propios ya implementados. Esta colección no implementa gestor de actualizaciones, lockfile de instalación, bundles de release ni CI de empaquetado; los mecanismos que pueda proporcionar la CLI externa deben verificarse por separado. Crear esta documentación no publica una versión ni crea tags.
 
 ## Recomendación
 
-Usar **GitHub como origen versionado y copias locales por proyecto fijadas a un commit**. Después, añadir bundles de GitHub Releases y un instalador pequeño que verifique integridad, muestre el diff y requiera aprobación para actualizar.
+Usar **GitHub como origen versionado y copias locales por proyecto fijadas a un commit**. Como canal inicial, documentar y validar `npx skills` antes de construir un instalador propio. Los comandos sencillos `add owner/repo` no constituyen por sí solos una garantía de pinning: verificar revisión, actualización, conflictos y licencia con una versión concreta de la CLI.
+
+Después, evaluar bundles de GitHub Releases y qué controles adicionales hacen falta para verificar integridad, mostrar el diff y aprobar actualizaciones. Solo implementar un instalador propio si la herramienta externa no cubre los requisitos; los contratos siguientes describen esos requisitos, no garantías ya ofrecidas por `npx skills`.
 
 La unidad de instalación sigue siendo cada carpeta de skill completa. Para empezar, una versión de la colección es más sencilla que seis ciclos independientes: una release puede distribuir un bundle completo y permitir seleccionar qué skills instalar. Si en el futuro hay consumidores y cadencias realmente diferentes, se puede evaluar versionado individual sin cambiar el formato de las carpetas.
 
@@ -24,7 +26,7 @@ El proyecto consumidor debe poder conservar las skills instaladas bajo control d
 | Submódulo Git | Revisión fijada por Git | Añade pasos de checkout y gestión, y expone más estructura de la necesaria; no lo elegiría como valor por defecto |
 | Gestor externo o marketplace | Puede facilitar descubrimiento e instalación | Exige auditar resolución de versiones, scripts, actualizaciones y permisos; adaptador opcional futuro, no raíz de confianza |
 
-No necesitamos npm, un registry ni ejecutar código descargado para repartir archivos Markdown. Un comando cómodo de instalación puede añadirse sin convertir una dependencia remota mutable en autoridad sobre las instrucciones.
+No necesitamos publicar esta colección como paquete npm ni crear un registry. La copia manual puede realizarse sin ejecutar código descargado; `npx skills`, en cambio, obtiene y ejecuta una CLI externa a través de npm. Revisar y fijar esa herramienta es distinto de revisar y fijar las skills. El acceso cómodo no convierte una dependencia remota mutable en autoridad sobre las instrucciones.
 
 ## Contrato propuesto del bundle
 

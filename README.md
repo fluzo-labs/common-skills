@@ -1,166 +1,186 @@
 # common-skills
 
-Colección de skills reutilizables para agentes de programación. Cada skill contiene instrucciones para una tarea concreta y puede incorporarse a otros proyectos sin depender de este repositorio completo.
+English | [Español](README.es.md)
 
-La colección cubre refinamiento de issues, planificación local, ejecución de una fase, revisión de entregas para GitHub, commits convencionales y preparación de releases con changelog. Consulta el [catálogo](skills/README.md) para elegir la skill y sus dependencias.
+A collection of reusable skills for coding agents. Each skill provides instructions for a specific task and can be used in other projects without depending on this entire repository.
 
-## Documentación
+The collection covers issue refinement, local planning, single-phase execution, GitHub delivery review, conventional commits, and release preparation with changelogs. See the [catalog](skills/README.md) to choose a skill and review its dependencies.
 
-- [Guía de uso](docs/USAGE.md): qué skill elegir, entradas/salidas, ejemplos y aprobaciones.
-- [Distribución propuesta](docs/DISTRIBUTION.md): copias por proyecto fijadas a SHA, bundles verificables y plan del futuro instalador. Distingue funcionalidades actuales de propuestas.
-- [Catálogo](skills/README.md): instrucciones y dependencias de las seis skills.
+## Documentation
 
-## Organización
+The following supporting guides are currently in Spanish:
+
+- [Usage guide](docs/USAGE.md): choosing skills, inputs/outputs, examples, and approvals.
+- [Proposed distribution](docs/DISTRIBUTION.md): SHA-pinned project copies, verifiable bundles, and a future installer plan. Distinguishes existing capabilities from proposals.
+- [Catalog](skills/README.md): instructions and dependencies for all six skills.
+
+## Structure
 
 ```text
 skills/
-  README.md                 Catálogo de skills publicadas
-  <nombre>/
-    SKILL.md                Instrucciones y metadatos de una skill
-    references/             Documentación adicional, opcional
-    scripts/                Automatizaciones, opcional
-    assets/                 Plantillas y otros recursos, opcional
+  README.md                 Catalog of published skills
+  <name>/
+    SKILL.md                Skill instructions and metadata
+    references/             Additional documentation, optional
+    scripts/                Automation, optional
+    assets/                 Templates and other resources, optional
 templates/
   skill/
-    SKILL.md                Plantilla para crear nuevas skills
+    SKILL.md                Template for new skills
 docs/
-  USAGE.md                  Uso, ejemplos y límites de autorización
-  DISTRIBUTION.md           Diseño propuesto de distribución segura
-AGENTS.md                   Reglas de mantenimiento del repositorio
-.editorconfig               Formato básico de los archivos
-.gitignore                  Estado local, secretos y archivos temporales
-LICENSE                     Licencia MIT
+  USAGE.md                  Usage, examples, and authorization boundaries
+  DISTRIBUTION.md           Proposed secure distribution design
+AGENTS.md                   Repository maintenance instructions
+.editorconfig               Basic file formatting
+.gitignore                  Local state, secrets, and temporary files
+LICENSE                     MIT license
 ```
 
-Las carpetas `<nombre>/` y sus recursos son ilustrativos: se crean al añadir una skill. No hay aplicación, dependencias de ejecución comunes ni paso de compilación.
+The `<name>/` folders and their resources are illustrative: create them when adding a skill. There is no application, shared runtime dependency set, or build step.
 
-## Crear una skill
+## Create a skill
 
-Desde la raíz del repositorio, sustituye `mi-skill` por un nombre en minúsculas con guiones:
+From the repository root, replace `my-skill` with a lowercase, hyphenated name:
 
 ```bash
-test ! -e skills/mi-skill && cp -R templates/skill skills/mi-skill
+test ! -e skills/my-skill && cp -R templates/skill skills/my-skill
 ```
 
-1. Edita `skills/mi-skill/SKILL.md`: sustituye el nombre, la descripción y todos los textos orientativos.
-2. Haz coincidir el campo `name` con el nombre de la carpeta. La `description` debe explicar cuándo activar la skill, no solo qué contiene.
-3. Escribe un procedimiento concreto, requisitos comprobables y criterios de validación. Indica el directorio de trabajo de cada comando.
-4. Añade recursos solo si son necesarios y enlázalos desde `SKILL.md`. Las rutas a estos recursos son relativas a la carpeta de la skill, no al proyecto consumidor.
-5. Prueba la skill en un proyecto representativo y añádela al [catálogo](skills/README.md), incluyendo sus dependencias externas.
+1. Edit `skills/my-skill/SKILL.md`: replace the name, description, and all guidance text.
+2. Match the frontmatter `name` to the folder name. The `description` must explain when to activate the skill, not just what it contains.
+3. Write a concrete procedure, verifiable requirements, and validation criteria. Specify each command's working directory.
+4. Add resources only when needed and link them from `SKILL.md`. Resource paths are relative to the skill folder, not the consumer project.
+5. Test the skill in a representative project and add it to the [catalog](skills/README.md), including external dependencies.
 
-Mantén `SKILL.md` centrado en las decisiones y el flujo principal. Traslada los detalles extensos a `references/` e indica cuándo consultarlos para evitar cargar contexto innecesario.
+Keep `SKILL.md` focused on decisions and the main workflow. Move lengthy details into `references/` and explain when to consult them to avoid loading unnecessary context.
 
-## Reutilizar en otros proyectos
+## Reuse in other projects
 
-### Copiar una skill
+### Install with `npx skills`
 
-Para copiar la skill de commits, ejecuta desde la raíz del proyecto consumidor, sustituyendo la ruta a esta colección:
+From the consumer project root, with Node.js/npm (`npx`), Git, and network access:
+
+```bash
+npx skills add fluzo-labs/common-skills --list
+npx skills add fluzo-labs/common-skills --skill '*' --agent universal --copy
+```
+
+The first command lists available skills; the second installs all six into `.agents/skills/`, a path discovered by Crush. To select just one, replace `'*'` with its name. For the Crush-specific `.crush/skills/` destination, use `--agent crush`, bearing in mind that `.crush/` may be ignored by Git. Do not install the same skill into both destinations.
+
+We do not need to publish our own npm package: the external CLI installs from this public repository. However, `npx` may download and execute the installer; `--copy` neither pins versions nor guarantees security. These examples preserve confirmation prompts and do not install globally.
+
+See the [usage guide](docs/USAGE.md) for individual/global installation, other agents, checks, and reviewed updates. Commands are documented according to the official CLI; an isolated installation of this collection has not yet been tested.
+
+### Copy a skill
+
+To copy the commit skill, run from the consumer project root, replacing the path to this collection:
 
 ```bash
 mkdir -p .agents/skills
-test ! -e .agents/skills/git-conventional-commit && cp -R /ruta/absoluta/common-skills/skills/git-conventional-commit .agents/skills/git-conventional-commit
+test ! -e .agents/skills/git-conventional-commit && cp -R /absolute/path/common-skills/skills/git-conventional-commit .agents/skills/git-conventional-commit
 ```
 
-Después, solicita al agente un commit de los cambios concretos que quieras registrar. Pedir solo una propuesta de mensaje no autoriza a modificar el índice ni el historial. La skill no hace push ni carga contenido remoto; sus convenciones y escenarios de validación están incluidos en la carpeta.
+Then ask the agent to commit the specific changes you want to record. Asking only for a proposed message does not authorize changes to the index or history. The skill does not push or load remote content; its conventions and validation scenarios are included in the folder.
 
-Copia la carpeta completa, no solo `SKILL.md`: puede depender de recursos incluidos. La comprobación evita sustituir una carpeta existente. Una copia no recibe actualizaciones automáticamente; revisa las diferencias antes de actualizarla y conserva las personalizaciones del proyecto consumidor.
+Copy the entire folder, not just `SKILL.md`: it may depend on included resources. The check prevents replacing an existing folder. A copy does not receive automatic updates; review differences before updating and preserve consumer project customizations.
 
-Crush descubre `.agents/skills`, `.crush/skills`, `.claude/skills` y `.cursor/skills` por defecto. Para otros agentes, comprueba sus rutas y compatibilidad; el uso de `SKILL.md` no garantiza que todos interpreten las mismas extensiones.
+Crush discovers `.agents/skills`, `.crush/skills`, `.claude/skills`, and `.cursor/skills` by default. For other agents, check their paths and compatibility; using `SKILL.md` does not guarantee they interpret the same extensions.
 
-### Cargar la colección directamente con Crush
+### Load the collection directly with Crush
 
-En el `crushrc` del proyecto consumidor o en tu configuración global de Crush, añade una ruta absoluta a la carpeta `skills/` de tu copia local:
+In the consumer project's `crushrc` or your global Crush configuration, add an absolute path to the `skills/` folder in your local checkout:
 
 ```bash
-option skill-path /ruta/absoluta/common-skills/skills
+option skill-path /absolute/path/common-skills/skills
 ```
 
-`option` es una función de configuración de Crush, no un comando para ejecutar directamente en una terminal. No apuntes a la raíz del repositorio ni a `templates/`, para evitar cargar la plantilla como una skill real. Este método utiliza los archivos compartidos directamente: cualquier modificación de la colección afecta a los proyectos que la carguen.
+`option` is a Crush configuration function, not a command to run directly in a terminal. Do not point it at the repository root or `templates/`, to avoid loading the template as a real skill. This method uses shared files directly: any change to the collection affects projects loading it.
 
-No es necesario configurar proveedores, claves ni permisos para distribuir esta colección. Revisa las instrucciones y los scripts antes de permitir su ejecución en otro proyecto.
+No provider, key, or permission configuration is required to distribute this collection. Review instructions and scripts before allowing their execution in another project.
 
-## Flujo de trabajo
+## Workflow
 
-| Paso | Skill | Resultado y límite |
+| Step | Skill | Outcome and boundary |
 | --- | --- | --- |
-| Refinar | [issue-refine-github](skills/issue-refine-github/SKILL.md) | Propone conservar, ampliar o dividir una issue; no crea hijas por defecto. |
-| Planificar | [plan-create](skills/plan-create/SKILL.md) | Propone fases y guarda un plan local solo con contenido y destino aprobados. |
-| Ejecutar | [plan-execute](skills/plan-execute/SKILL.md) | Implementa una fase aprobada, verifica y se detiene para revisión. |
-| Preparar entrega | [delivery-review-github](skills/delivery-review-github/SKILL.md) | Propone actualización de issue y PR con evidencia; publica solo lo autorizado. |
-| Registrar cambios | [git-conventional-commit](skills/git-conventional-commit/SKILL.md) | Crea un commit local únicamente ante petición explícita. |
-| Preparar release | [release-prepare-github](skills/release-prepare-github/SKILL.md) | Separa changelog, versión/evidencia y publicación de una release aprobada; no crea tags implícitos. |
+| Refine | [issue-refine-github](skills/issue-refine-github/SKILL.md) | Proposes keeping, expanding, or splitting an issue; does not create children by default. |
+| Plan | [plan-create](skills/plan-create/SKILL.md) | Proposes phases and saves a local plan only with approved content and destination. |
+| Execute | [plan-execute](skills/plan-execute/SKILL.md) | Implements one approved phase, verifies it, and stops for review. |
+| Prepare delivery | [delivery-review-github](skills/delivery-review-github/SKILL.md) | Proposes an issue update and PR with evidence; publishes only what is authorized. |
+| Record changes | [git-conventional-commit](skills/git-conventional-commit/SKILL.md) | Creates a local commit only upon explicit request. |
+| Prepare release | [release-prepare-github](skills/release-prepare-github/SKILL.md) | Separates changelog, version/evidence preparation, and approved release publication; does not create implicit tags. |
 
-No necesitas recorrer todos los pasos. Una issue pequeña puede ejecutarse sin dividirla; una tarea sin GitHub puede planificarse y ejecutarse localmente; una entrega existente puede revisarse sin un plan creado por estas skills. Instala cada carpeta necesaria mediante el mismo procedimiento de copia anterior, sustituyendo el nombre de la skill.
+You do not need to follow every step. A small issue can be executed without splitting it; a task without GitHub can be planned and executed locally; an existing delivery can be reviewed without a plan created by these skills. Install each needed folder using the same copy procedure above, replacing the skill name.
 
-Las integraciones son opcionales y transmiten datos, no permisos: fuente y revisión, objetivo, alcance, fase, contratos, aceptación, dependencias, verificación y evidencia de aprobación. Ninguna skill carga archivos de carpetas hermanas ni instala otras. El refinamiento admite un borrador de `plan-create`, pero GitHub sigue siendo la fuente de verdad de estados y dependencias; no se mantiene otro tablero local.
+Integrations are optional and transmit data, not permissions: source and revision, goal, scope, phase, contracts, acceptance criteria, dependencies, verification, and approval evidence. No skill loads files from sibling folders or installs other skills. Refinement can use a `plan-create` draft, but GitHub remains the source of truth for states and dependencies; no second local board is maintained.
 
-Ejemplos de peticiones al agente:
+Example requests to the agent:
 
-- «Revisa si esta issue necesita refinamiento; no modifiques GitHub».
-- «Propón un plan local para esta tarea; enséñamelo antes de guardarlo».
-- «Implementa únicamente la fase P1 de este plan aprobado».
-- «Prepara la actualización de la issue y la PR de esta entrega, sin publicarlas».
-- «Genera un borrador de changelog entre este tag y este SHA, sin escribir ni publicar».
-- «Prepara la próxima release con propuesta de versión, evidencias y checksums; no crees tags».
+- "Check whether this issue needs refinement; do not modify GitHub."
+- "Propose a local plan for this task; show it to me before saving it."
+- "Implement only phase P1 of this approved plan."
+- "Prepare the issue update and PR for this delivery without publishing them."
+- "Generate a draft changelog between this tag and this SHA without writing or publishing."
+- "Prepare the next release with a version proposal, evidence, and checksums; do not create tags."
 
-### Activación y aprobaciones
+### Activation and approvals
 
-Las skills nuevas permiten selección por el modelo (`disable-model-invocation: false`) y uso manual (`user-invocable: true`). La selección depende del agente: no hay un observador de GitHub, hook ni garantía de ejecución automática. Invocar una skill nunca autoriza todas sus operaciones.
+The new workflow skills allow model selection (`disable-model-invocation: false`) and manual invocation (`user-invocable: true`). Selection depends on the agent: there is no GitHub watcher, hook, or guarantee of automatic execution. Invoking a skill never authorizes all its operations.
 
-Si quieres reforzar el flujo, puedes incorporar esta regla a las instrucciones del proyecto consumidor después de revisarla:
+To reinforce the workflow, you can incorporate this rule into the consumer project's instructions after reviewing it:
 
-> Antes de implementar una issue, evalúa alcance, contratos, dependencias y trabajo existente. Si necesita refinamiento, propone los cambios sin mutar GitHub; usa `issue-refine-github` si está disponible. Implementa una sola fase aprobada y presenta evidencia antes de continuar o publicar.
+> Before implementing an issue, assess scope, contracts, dependencies, and existing work. If refinement is needed, propose changes without mutating GitHub; use `issue-refine-github` if available. Implement one approved phase and present evidence before continuing or publishing.
 
-No se modifica automáticamente la configuración de otros proyectos. Aprobar un plan no aprueba commit, push, publicación de PR, cierre de issues ni cambios de Project. Una lista explícita de operaciones y textos aprobada conjuntamente puede autorizar una publicación sin repetir preguntas por cada comando.
+Other projects' configuration is not modified automatically. Approving a plan does not approve commits, pushes, PR publication, issue closure, or Project changes. Joint approval of an explicit list of operations and text can authorize publication without repeating questions for every command.
 
-### Adaptación al backlog y seguridad
+### Backlog adaptation and safety
 
-Las skills descubren gobernanza, idioma, baseline, plantillas, repositorios responsables, relaciones y campos de Project del consumidor. No fijan organizaciones ni IDs y no confunden padre/hija con dependencia. Conservan marcadores únicos de importación en su issue original y no convierten toda tarea en un epic.
+Skills discover the consumer's governance, language, baseline, templates, owning repositories, relationships, and Project fields. They do not hardcode organizations or IDs and do not confuse parent/child relationships with dependencies. They preserve unique import markers in the original issue and do not turn every task into an epic.
 
-Las convenciones y plantillas de las skills son locales; las operaciones GitHub sí necesitan red y autenticación mediante `gh`. No se descargan skills ni se amplían scopes automáticamente. Se consulta la ayuda de la versión instalada antes de usar opciones como `--parent`; hay una alternativa REST para vincular hijas y se declara cualquier limitación de host o permisos.
+Skill conventions and templates are local; GitHub operations do require network access and authentication through `gh`. Skills are not downloaded and scopes are not expanded automatically. The installed version's help is checked before using options such as `--parent`; a REST alternative is available for linking children, and host or permission limitations are reported.
 
-El modo propuesta no ejecuta comandos de escritura ni `gh pr create --dry-run`, que puede hacer push. La publicación revalida revisiones, detecta recursos existentes y conserva resultados parciales para evitar duplicados. Estas instrucciones no son un sandbox ni una garantía de resistencia a prompt injection.
+Proposal mode does not execute write commands or `gh pr create --dry-run`, which may push. Publication revalidates revisions, detects existing resources, and preserves partial results to avoid duplicates. These instructions are neither a sandbox nor a guarantee of resistance to prompt injection.
 
-### Releases y changelog
+### Releases and changelogs
 
-`release-prepare-github` tiene tres modos: solo changelog, preparación de release y publicación expresamente aprobada. Fija componente, línea de release y SHA candidato; no toma simplemente el tag de versión más alta. Contempla primera release, historial incompleto, rangos vacíos, prereleases y workspaces, y conserva entradas históricas y notas manuales.
+`release-prepare-github` has three modes: changelog only, release preparation, and explicitly approved publication. It pins the component, release line, and candidate SHA rather than simply taking the highest version tag. It handles first releases, incomplete history, empty ranges, prereleases, and workspaces while preserving historical entries and curated notes.
 
-La generación usa Git y, opcionalmente, git-cliff ya instalado con configuración local revisada y `--offline --no-exec`. No instala herramientas ni descarga configuración. La falta de git-cliff no impide redactar el changelog desde el historial.
+Generation uses Git and, optionally, an already installed git-cliff with reviewed local configuration and `--offline --no-exec`. It does not install tools or download configuration. Missing git-cliff does not prevent drafting a changelog from history.
 
-La preparación incluye un manifiesto de revisiones, criterios, pruebas, artefactos, checksums y limitaciones. Una PR de versión/changelog puede pasar por `delivery-review-github`, pero su merge no autoriza la release. La publicación verifica el SHA real del tag remoto, trabaja primero con un draft y comprueba los assets antes de publicar; `--verify-tag` impide crear tags implícitos, pero no sustituye comparar el SHA. Tag, push, publicación, Latest, registries y workflows requieren su autorización correspondiente.
+Preparation includes a manifest of revisions, criteria, tests, artifacts, checksums, and limitations. A version/changelog PR can go through `delivery-review-github`, but merging it does not authorize the release. Publication verifies the remote tag's actual SHA, works with a draft first, and checks assets before publishing; `--verify-tag` prevents implicit tag creation but does not replace comparing the SHA. Tagging, pushing, publication, Latest, registries, and workflows require their corresponding authorization.
 
-## Convenciones
+## Conventions
 
-- Skills, referencias, ejemplos y plantilla de autoría en inglés. La documentación de mantenimiento permanece en español.
-- El idioma de las skills no impone el de sus resultados: planes, issues y mensajes siguen las reglas del proyecto consumidor o, si no existen, el idioma del usuario.
-- Una responsabilidad concreta por skill; evita instrucciones genéricas duplicadas.
-- Skills autocontenidas: sin rutas personales, dependencias de carpetas hermanas ni referencias a archivos internos de este repositorio.
-- Declara herramientas y versiones requeridas en cada skill; no supongas que el consumidor comparte tu entorno.
-- El contexto y las instrucciones del proyecto consumidor deben respetarse. Las skills no deben intentar saltarse permisos ni imponer cambios ajenos a su tarea.
-- No incluyas secretos ni datos reales. Usa ejemplos ficticios y variables de entorno cuando corresponda.
-- Mantén los archivos de licencia y avisos de atribución aplicables al redistribuir contenido.
+- Skills, references, examples, the authoring template, and this README are in English. [README.es.md](README.es.md) is the Spanish version; other maintenance documentation remains in Spanish.
+- Keep both README versions synchronized when changing installation instructions or workflows.
+- The language of skill instructions does not dictate their outputs: plans, issues, and messages follow consumer project rules or, if absent, the user's language.
+- One concrete responsibility per skill; avoid duplicated generic instructions.
+- Self-contained skills: no personal paths, sibling-folder dependencies, or references to internal files of this repository.
+- Declare required tools and versions in each skill; do not assume the consumer shares your environment.
+- Respect consumer project context and instructions. Skills must not bypass permissions or impose changes unrelated to their task.
+- Do not include secrets or real data. Use fictional examples and environment variables where appropriate.
+- Preserve applicable license files and attribution notices when redistributing content.
 
-## Comprobaciones
+## Checks
 
-Actualmente no hay suite de tests, linter ni CI configurados. Para cambios de documentación, ejecuta desde la raíz:
+There is currently no configured test suite, linter, or CI. For documentation changes, run from the repository root:
 
 ```bash
 git diff --check
 git status --short
 ```
 
-`git diff --check` no revisa archivos nuevos sin seguimiento: inspecciónalos también antes de incorporarlos. Revisa que el frontmatter contenga `name` y `description`, que el nombre coincida con la carpeta, que los enlaces relativos existan y que no queden textos de la plantilla.
+`git diff --check` does not inspect new untracked files: review those too before adding them. Check that frontmatter contains `name` and `description`, names match folder names, relative links exist, and no template guidance remains.
 
-Si una skill incorpora scripts, documenta y ejecuta sus comprobaciones específicas; no existe un comando de pruebas común para toda la colección. Verifica también que la carpeta siga funcionando al copiarse fuera del repositorio.
+If a skill includes scripts, document and run its specific checks; there is no common test command for the collection. Also verify that the folder still works when copied outside this repository.
 
-Para la skill de commits, utiliza sus [escenarios de validación](skills/git-conventional-commit/references/validation.md) en repositorios temporales. Las demás incluyen escenarios locales en su `SKILL.md` o referencias: [refinamiento](skills/issue-refine-github/references/refinement.md), [ejecución](skills/plan-execute/references/execution.md) y [entrega](skills/delivery-review-github/references/delivery-template.md). La skill de release incluye su [matriz de validación](skills/release-prepare-github/references/validation.md) para rangos, evidencias, tags, assets y fallos parciales.
+For the commit skill, use its [validation scenarios](skills/git-conventional-commit/references/validation.md) in temporary repositories. The others include local scenarios in their `SKILL.md` or references: [refinement](skills/issue-refine-github/references/refinement.md), [execution](skills/plan-execute/references/execution.md), and [delivery](skills/delivery-review-github/references/delivery-template.md). The release skill includes a [validation matrix](skills/release-prepare-github/references/validation.md) for ranges, evidence, tags, assets, and partial failures.
 
-Verifica enlaces después de copiar cada carpeta por separado y comprueba el modo propuesta, aprobaciones, fuentes obsoletas y recuperación parcial con respuestas simuladas. No hagas mutaciones de prueba contra un backlog real. Distingue sintaxis y mecánica de comandos de pruebas reales de GitHub y de la evaluación del agente ante contenido no confiable.
+Check links after copying each folder separately and verify proposal mode, approvals, outdated sources, and partial recovery using simulated responses. Do not run mutation tests against a real backlog. Distinguish command syntax and mechanics from real GitHub tests and evaluation of agent behavior with untrusted content.
 
-## Archivos locales
+## Local files
 
-`.gitignore` excluye `.crush/` completo, archivos `.env`, temporales del editor y entornos/cachés de Python. Permite `.env.example` y `.env.*.example`, que nunca deben contener credenciales reales. Las skills publicadas deben vivir en `skills/`, no en `.crush/skills/`.
+`.gitignore` excludes the entire `.crush/` directory, `.env` files, editor temporary files, and Python environments/caches. It allows `.env.example` and `.env.*.example`, which must never contain real credentials. Published skills belong in `skills/`, not `.crush/skills/`.
 
-## Licencia
+## License
 
 [MIT](LICENSE).

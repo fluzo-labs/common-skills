@@ -8,6 +8,82 @@ Las seis skills están redactadas en inglés. Sus resultados respetan el idioma 
 
 Consulta el [catálogo](../skills/README.md) para ver dependencias y el [README](../README.md) para copiar una skill o configurar su carga en Crush. Para equipos, sigue la [propuesta de distribución versionada](DISTRIBUTION.md), que distingue lo disponible de lo pendiente de construir.
 
+## Instalación con `npx skills`
+
+La [CLI skills](https://github.com/vercel-labs/skills) reconoce la estructura `skills/<nombre>/SKILL.md` de este repositorio público. No necesitas publicar esta colección en npm, registrar un paquete propio ni desplegar una web: `npx` obtiene y ejecuta el instalador externo `skills`, que descarga las skills desde GitHub.
+
+Necesitas Node.js/npm con `npx`, Git y acceso a npm y GitHub, con versiones compatibles con la CLI elegida. Ejecuta los comandos desde la raíz del **proyecto consumidor**, no desde esta colección. Revisa el instalador y el origen antes de ejecutarlos: incluso `--list` puede descargar y ejecutar la CLI y consultar la red, aunque no instale skills en el proyecto.
+
+### 1. Listar las disponibles
+
+```bash
+npx skills add fluzo-labs/common-skills --list
+```
+
+Deberían aparecer las seis skills del [catálogo](../skills/README.md). No uses `--full-depth`: no hace falta para esta estructura y puede descubrir la plantilla de autoría fuera de `skills/`.
+
+### 2. Instalar por proyecto
+
+Para instalar una skill en `.agents/skills/`, una ruta que Crush descubre y que puede versionarse con el proyecto:
+
+```bash
+npx skills add fluzo-labs/common-skills --skill release-prepare-github --agent universal --copy
+```
+
+Para instalar las seis en ese destino:
+
+```bash
+npx skills add fluzo-labs/common-skills --skill '*' --agent universal --copy
+```
+
+Las comillas de `'*'` evitan que el shell lo expanda a nombres de archivos. `--copy` solicita copias en lugar de enlaces simbólicos; no fija una revisión ni garantiza protección de personalizaciones durante futuras actualizaciones. Se conservan los prompts de confirmación: no añadimos `--yes` ni `--all`, que puede instalar en todos los agentes sin preguntar.
+
+Si prefieres el destino específico de Crush, usa esta alternativa, no ambos destinos para la misma skill:
+
+```bash
+npx skills add fluzo-labs/common-skills --skill release-prepare-github --agent crush --copy
+```
+
+`--agent crush` instala en `.crush/skills/`. Comprueba el `.gitignore` del consumidor: es frecuente ignorar `.crush/` completo, como ocurre en esta colección. Si quieres compartir las instrucciones en Git, es preferible `.agents/skills/` mediante `--agent universal` a desproteger todo el estado local de Crush.
+
+Otros agentes tienen sus propios destinos. Por ejemplo:
+
+```bash
+npx skills add fluzo-labs/common-skills --skill plan-create --agent claude-code --copy
+npx skills add fluzo-labs/common-skills --skill plan-create --agent codex --copy
+```
+
+Consulta la tabla de compatibilidad de la CLI antes de elegir agente; instalar archivos en su ruta no demuestra que soporte todos los campos o comportamientos de una skill.
+
+### 3. Instalación global opcional
+
+Solo si quieres que esté disponible fuera de este proyecto:
+
+```bash
+npx skills add fluzo-labs/common-skills --skill release-prepare-github --agent crush --copy --global
+```
+
+La CLI documenta `~/.config/crush/skills/` como destino global de Crush. Confirma el destino mostrado para tu plataforma y configuración. No uses `--global` por defecto para un equipo: esa instalación no viaja con el repositorio y sus cambios pueden afectar a varios proyectos.
+
+### 4. Comprobar y empezar a usar
+
+```bash
+npx skills list
+```
+
+Comprueba la carpeta instalada, `SKILL.md`, todas sus referencias y su descubrimiento en el agente. Revisa los archivos y registros generados por la CLI antes de incorporarlos al control de versiones; no añadas estado local ni credenciales. Conserva el texto de [LICENSE](../LICENSE) y los avisos aplicables si redistribuyes las copias; no asumas que el instalador externo copia automáticamente la licencia de la raíz.
+
+Después puedes pedir, por ejemplo: «Usa release-prepare-github para proponer un changelog; no escribas ni publiques todavía». Instalar una skill no concede permisos para ejecutarla o publicar cambios.
+
+### Versiones, privacidad y actualizaciones
+
+- Los ejemplos sin versión priorizan facilidad de uso: no constituyen una instalación reproducible ni fijan el contenido a un SHA. Para un flujo controlado, selecciona y valida una versión concreta del instalador y una revisión concreta de la colección; son dos cosas distintas.
+- No deduzcas garantías de pinning o restauración por la mera existencia de un registro o lockfile de la CLI: comprueba su comportamiento en la versión elegida. Una alternativa es instalar desde una copia local previamente revisada y fijada a un commit, usando el soporte de rutas locales de la CLI.
+- Antes de actualizar, guarda tus personalizaciones y prueba el resultado en un destino aislado. Revisa el diff antes de aceptar cambios de instrucciones. No configures actualizaciones automáticas ni presupongas que `skills update` preserva modificaciones locales.
+- La CLI documenta `DISABLE_TELEMETRY=1` y `DO_NOT_TRACK=1` para desactivar telemetría. Configura la variable en tu entorno si lo necesitas; en un shell compatible con Bash puedes anteponer `DISABLE_TELEMETRY=1` al comando `npx`.
+
+Estos comandos se documentan a partir de la CLI oficial; todavía no hemos ejecutado una instalación aislada de esta colección con ella. La validación documental no equivale a compatibilidad funcional comprobada ni a una auditoría de seguridad del instalador.
+
 ## Primera utilización
 
 1. Elige una revisión de la colección y revisa el contenido que vas a cargar.
