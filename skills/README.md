@@ -1,0 +1,20 @@
+# Catálogo de skills
+
+| Skill | Cuándo usarla | Dependencias |
+| --- | --- | --- |
+| [git-conventional-commit](git-conventional-commit/SKILL.md) | Crear un único commit local solicitado por el usuario, con alcance revisado y mensaje Conventional Commits. | Git y permisos sobre el repositorio consumidor; sin red ni instalaciones adicionales. |
+| [issue-refine-github](issue-refine-github/SKILL.md) | Evaluar una issue existente y proponer conservarla, ampliarla o descomponerla sin duplicar el backlog. | GitHub CLI y acceso de lectura; escritura y Project solo con permisos y aprobación específicos. |
+| [plan-create](plan-create/SKILL.md) | Proponer y guardar un plan local aprobado con contratos, fases y criterios verificables. | Acceso al proyecto; Git opcional y GitHub CLI solo para fuentes remotas. |
+| [plan-execute](plan-execute/SKILL.md) | Implementar una sola fase aprobada de un plan local o issue y presentar evidencia para revisión. | Herramientas del consumidor; GitHub CLI solo para fuentes de GitHub. |
+| [delivery-review-github](delivery-review-github/SKILL.md) | Contrastar una entrega y proponer comentario de issue y PR enlazada antes de publicar. | Git, GitHub CLI y contexto de la entrega; permisos adicionales solo para operaciones aprobadas. |
+| [release-prepare-github](release-prepare-github/SKILL.md) | Generar changelog, preparar versión y evidencia, o publicar una release aprobada desde un tag y SHA verificados. | Git; GitHub CLI para operaciones remotas; git-cliff opcional y herramientas de verificación del consumidor. |
+
+El flujo opcional es refinar → planificar → ejecutar una fase → revisar entrega → preparar release. Aprobar una entrega o fusionar su PR no autoriza tags ni publicación. Ninguna skill requiere instalar otra ni encadena mutaciones automáticamente. Los permisos y las aprobaciones se comprueban en cada paso; GitHub conserva la autoridad del estado remoto.
+
+La plantilla vive en `../templates/skill/`, fuera de esta carpeta para que los agentes no la carguen como una skill real.
+
+Cada skill publicada ocupa una carpeta `skills/<nombre>/` con un archivo `SKILL.md`. Usa nombres en minúsculas con guiones y el mismo valor en el campo `name` del frontmatter.
+
+Al publicar una skill, añade aquí un enlace a su `SKILL.md`, una descripción breve de cuándo usarla y sus dependencias externas. No registres plantillas ni borradores como skills disponibles.
+
+Cada carpeta debe poder copiarse de forma independiente a otro proyecto. Guarda sus recursos opcionales en `references/`, `scripts/` y `assets/` dentro de la propia carpeta; créalos solo cuando tengan contenido.
